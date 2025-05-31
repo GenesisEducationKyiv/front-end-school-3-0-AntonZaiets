@@ -1,18 +1,12 @@
-export interface ITrack {
-    id: string;
-    title: string;
-    artist: string;
-    album: string;
-    genres: string[];
-    coverImage: string;
-    audioFile: string;
-    file?: any;
-}
+import { TrackSchema } from '../schemas/trackSchemas.ts'
+import { z } from 'zod'
 
-export type TTrackFormData = {
+export type ITrack = z.infer<typeof TrackSchema>;
+
+export interface TTrackFormData {
     title: string;
     artist: string;
     album?: string;
     genres: string[];
     coverImage?: string;
-};
+}
