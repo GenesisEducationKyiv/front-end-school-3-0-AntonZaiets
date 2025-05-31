@@ -5,7 +5,7 @@ import TrackActions from './components/TrackActions/TrackActions.tsx';
 import TrackAudioPlayer from './components/TrackAudioPlayer/TrackAudioPlayer.tsx';
 import TrackCheckbox from './components/TrackCheckbox/TrackCheckbox.tsx';
 import UploadModalHandler from './components/UploadModalHandler/UploadModalHandler.tsx';
-import { getTemporaryLink } from '../../api/dropboxService.ts';
+import { getTemporaryLink } from '../../services/api/dropboxService.ts';
 import { ITrackItem } from './Interface';
 
 const TrackItem = ({ track, onEdit, onDelete, isSelectMode, isSelected, onSelect }: ITrackItem) => {

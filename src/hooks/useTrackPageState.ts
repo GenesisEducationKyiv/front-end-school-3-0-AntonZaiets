@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { fetchTracks, fetchGenres, deleteTrack, updateTrack, createTrack } from '../api/tracks';
+import { fetchTracks, fetchGenres, deleteTrack, updateTrack, createTrack } from '../services/api/tracks';
 import useDebounce from "./useDebounce.ts";
 import {SelectChangeEvent} from "@mui/material";
 
@@ -18,16 +18,44 @@ const useTrackPageState = () => {
     const [isSelectMode, setIsSelectMode] = useState(false);
     const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
 
+    const loadTracks = async () => {
+        const result = await fetchTracks(page, limit, sort, filter, debouncedSearchTerm);
+        return result.match(
+            (data) => {
+                console.log('Tracks loaded:', data.tracks);
+                return data;
+            },
+            (error) => {
+                console.error('Error loading tracks:', error.message);
+                return [];
+            }
+        );
+    };
+
+    const loadGenres = async () => {
+        const result = await fetchGenres();
+        return result.match(
+            (genres) => {
+                console.log('Genres loaded:', genres);
+                return genres;
+            },
+            (error) => {
+                console.error('Error loading genres:', error.message);
+                return [];
+            }
+        );
+    };
+
     const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
     const { data: genres } = useQuery({
         queryKey: ['genres'],
-        queryFn: fetchGenres
+        queryFn: () => loadGenres()
     });
 
     const { data: tracksData, isLoading, isError } = useQuery({
         queryKey: ['tracks', { page, limit, sort, filter, search: debouncedSearchTerm }],
-        queryFn: () => fetchTracks(page, limit, sort, filter, debouncedSearchTerm)
+        queryFn: () => loadTracks()
     });
 
     const deleteMutation = useMutation({

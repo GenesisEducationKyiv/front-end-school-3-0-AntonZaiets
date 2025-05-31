@@ -1,4 +1,4 @@
-import { Dropbox } from 'dropbox';
+import {Dropbox} from 'dropbox';
 
 const ACCESS_TOKEN = import.meta.env.VITE_ACCESS_TOKEN;
 
@@ -15,8 +15,7 @@ export const uploadFile = async (file: File, path: string) => {
 };
 
 export const deleteFile = async (path: string) => {
-    const res = await dbx.filesDeleteV2({ path: `/${path}` });
-    return res;
+    return await dbx.filesDeleteV2({path: `/${path}`});
 };
 
 export const getTemporaryLink = async (path: string) => {

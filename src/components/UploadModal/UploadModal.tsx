@@ -9,8 +9,8 @@ import {
     IconButton
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { uploadFile } from '../../api/dropboxService.ts';
-import { uploadFileNameToBackend } from '../../api/tracks.ts';
+import { uploadFile } from '../../services/api/dropboxService.ts';
+import { uploadFileNameToBackend } from '../../services/api/tracks.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import { IUploadModal } from './Interface';
 
