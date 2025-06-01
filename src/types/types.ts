@@ -1,12 +1,7 @@
-import { TrackSchema } from '../schemas/trackSchemas.ts'
-import { z } from 'zod'
+import { TrackSchema, TrackPayloadSchema } from '../schemas/trackSchemas.ts';
+import { z } from 'zod';
+import { Result } from 'neverthrow';
 
 export type ITrack = z.infer<typeof TrackSchema>;
-
-export interface TTrackFormData {
-    title: string;
-    artist: string;
-    album?: string;
-    genres: string[];
-    coverImage?: string;
-}
+export type TTrackFormData = z.infer<typeof TrackPayloadSchema>;
+export type AsyncResult<T> = Promise<Result<T, Error>>;
