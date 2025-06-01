@@ -1,4 +1,4 @@
 export interface ISearchBar {
-    value: string;
-    onChange: (value: string) => void;
+  value: string;
+  onChange: (value: string) => void;
 }
