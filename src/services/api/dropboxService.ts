@@ -1,8 +1,7 @@
 import { Dropbox } from 'dropbox';
+import { env } from '../../../config/config.ts';
 
-const ACCESS_TOKEN = import.meta.env.VITE_ACCESS_TOKEN;
-
-const dbx = new Dropbox({ accessToken: ACCESS_TOKEN });
+const dbx = new Dropbox({ accessToken: env.ACCESS_TOKEN });
 
 export const uploadFile = async (file: File, path: string) => {
   const contents = await file.arrayBuffer();

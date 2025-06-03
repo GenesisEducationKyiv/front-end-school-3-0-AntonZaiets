@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { env } from '../../../../config/config.ts';
 
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: env.API_URL,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
