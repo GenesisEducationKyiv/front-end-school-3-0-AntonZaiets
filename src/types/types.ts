@@ -1,18 +1,7 @@
-export interface ITrack {
-    id: string;
-    title: string;
-    artist: string;
-    album: string;
-    genres: string[];
-    coverImage: string;
-    audioFile: string;
-    file?: any;
-}
+import { TrackSchema, TrackPayloadSchema } from '../schemas/trackSchemas.ts';
+import { z } from 'zod';
+import { Result } from 'neverthrow';
 
-export type TTrackFormData = {
-    title: string;
-    artist: string;
-    album?: string;
-    genres: string[];
-    coverImage?: string;
-};
+export type ITrack = z.infer<typeof TrackSchema>;
+export type TTrackFormData = z.infer<typeof TrackPayloadSchema>;
+export type AsyncResult<T> = Promise<Result<T, Error>>;
