@@ -9,6 +9,7 @@ import {
 } from '../services/api/tracks';
 import useDebounce from './useDebounce.ts';
 import { SelectChangeEvent } from '@mui/material';
+import { setParam } from '../services/api/urlParams.ts';
 
 const useTrackPageState = () => {
   const queryClient = useQueryClient();
@@ -114,12 +115,18 @@ const useTrackPageState = () => {
   });
 
   const handleSortChange = (e: SelectChangeEvent<string>) => {
-    setSort(e.target.value);
-    setPage(1);
+    setTimeout(() => {
+      const value = e.target.value;
+      setSort(value);
+      setParam('sort', value);
+      setPage(1);
+    }, 0);
   };
 
   const handleFilterChange = (type: string, value: string) => {
-    setFilter((prev) => ({ ...prev, [type]: value }));
+    const actualValue = value === 'ALL' ? '' : value;
+    setFilter((prev) => ({ ...prev, [type]: actualValue }));
+    setParam(type, actualValue);
     setPage(1);
   };
 
