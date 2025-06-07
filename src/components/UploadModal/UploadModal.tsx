@@ -13,6 +13,9 @@ import { uploadFile } from '../../services/api/dropboxService.ts';
 import { uploadFileNameToBackend } from '../../services/api/tracks.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import { IUploadModal } from './Interface';
+import { AsyncResult } from '../../types/types.ts';
+import { handleError } from '../../services/api/handleError.ts';
+import { ok } from 'neverthrow';
 
 const UploadModal = ({
   open,
@@ -22,7 +25,6 @@ const UploadModal = ({
 }: IUploadModal) => {
   const [file, setFile] = useState<File | null>(null);
   const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,25 +33,26 @@ const UploadModal = ({
     }
   };
 
-  const handleUpload = async () => {
-    if (!file || !trackId) return;
+  const handleUpload = async (): AsyncResult<void> => {
+    if (!file || !trackId) return ok(undefined);
 
     setIsUploading(true);
-    setError(null);
 
     try {
       const ext = file.name.split('.').pop();
       const renamedFile = new File([file], `${trackId}.${ext}`, {
         type: file.type,
       });
+
       const url = await uploadFile(renamedFile, renamedFile.name);
       await uploadFileNameToBackend(trackId, url);
-      queryClient.invalidateQueries(['tracks']);
+      await queryClient.invalidateQueries(['tracks']);
       onUploadSuccess?.();
       onClose();
+
+      return ok(undefined);
     } catch (err) {
-      setError('Upload failed. Please try again.');
-      console.error('Upload failed:', err);
+      return handleError(err);
     } finally {
       setIsUploading(false);
     }
@@ -76,11 +79,6 @@ const UploadModal = ({
           data-testid="file-input"
         />
         {file && <p data-testid="selected-file">{file.name}</p>}
-        {error && (
-          <p style={{ color: 'red' }} data-testid="error-message">
-            {error}
-          </p>
-        )}
       </DialogContent>
 
       <DialogActions>

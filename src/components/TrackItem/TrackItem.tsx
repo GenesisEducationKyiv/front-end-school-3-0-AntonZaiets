@@ -7,6 +7,9 @@ import TrackCheckbox from './components/TrackCheckbox/TrackCheckbox.tsx';
 import UploadModalHandler from './components/UploadModalHandler/UploadModalHandler.tsx';
 import { getTemporaryLink } from '../../services/api/dropboxService.ts';
 import { ITrackItem } from './Interface';
+import { AsyncResult } from '../../types/types.ts';
+import { ok } from 'neverthrow';
+import { handleError } from '../../services/api/handleError.ts';
 
 const TrackItem = ({
   track,
@@ -20,17 +23,18 @@ const TrackItem = ({
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchAudioUrl = async () => {
-      if (track.audioFile) {
-        try {
-          const tempLink = await getTemporaryLink(`${track.id}.mp3`);
-          setAudioUrl(tempLink);
-        } catch (err) {
-          console.error('Error fetching Dropbox audio link:', err);
-        }
+    const fetchAudioUrl = async (): AsyncResult<void> => {
+      if (!track.audioFile) {
+        return ok(undefined);
+      }
+      try {
+        const tempLink: string = await getTemporaryLink(`${track.id}.mp3`);
+        setAudioUrl(tempLink);
+        return ok(undefined);
+      } catch (e) {
+        return handleError(e);
       }
     };
-
     fetchAudioUrl();
   }, [track.audioFile, track.id]);
 
