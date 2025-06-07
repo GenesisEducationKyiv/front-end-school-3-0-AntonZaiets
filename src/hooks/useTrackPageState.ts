@@ -9,21 +9,42 @@ import {
 } from '../services/api/tracks';
 import useDebounce from './useDebounce.ts';
 import { SelectChangeEvent } from '@mui/material';
-import { setParam } from '../services/api/urlParams.ts';
+import { setParam, getParam } from '../services/api/urlParams.ts';
+import { O, pipe } from '@mobily/ts-belt';
 
 const useTrackPageState = () => {
   const queryClient = useQueryClient();
-  const [page, setPage] = useState(1);
+
+  const [page, setPage] = useState<number>(() =>
+    pipe<O.Option<string>, O.Option<number>, number>(
+      getParam('page'),
+      O.flatMap((p) => {
+        const parsed = parseInt(p, 10);
+        return isNaN(parsed) ? O.None : O.Some(parsed);
+      }),
+      O.getWithDefault(1)
+    )
+  );
+
   const [limit] = useState(10);
-  const [sort, setSort] = useState('title');
-  const [filter, setFilter] = useState<Record<string, string>>({});
-  const [searchTerm, setSearchTerm] = useState('');
+  const [sort, setSort] = useState(() =>
+    pipe(getParam('sort'), O.getWithDefault('title'))
+  );
+  const [filter, setFilter] = useState<Record<string, string>>(() => ({
+    genre: pipe(getParam('genre'), O.getWithDefault('')),
+    artist: pipe(getParam('artist'), O.getWithDefault('')),
+  }));
+  const [searchTerm, setSearchTerm] = useState(() =>
+    pipe(getParam('search'), O.getWithDefault(''))
+  );
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
   const [deletingTrackId, setDeletingTrackId] = useState<string | null>(null);
   const [selectedTracks, setSelectedTracks] = useState<string[]>([]);
   const [isSelectMode, setIsSelectMode] = useState(false);
   const [isBulkConfirmOpen, setIsBulkConfirmOpen] = useState(false);
+
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const loadTracks = async () => {
     const result = await fetchTracks(
@@ -34,9 +55,7 @@ const useTrackPageState = () => {
       debouncedSearchTerm
     );
     return result.match(
-      (data) => {
-        return data;
-      },
+      (data) => data,
       (error) => {
         console.error('Error loading tracks:', error.message);
         return [];
@@ -47,17 +66,13 @@ const useTrackPageState = () => {
   const loadGenres = async () => {
     const result = await fetchGenres();
     return result.match(
-      (genres) => {
-        return genres;
-      },
+      (genres) => genres,
       (error) => {
         console.error('Error loading genres:', error.message);
         return [];
       }
     );
   };
-
-  const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const { data: genres } = useQuery({
     queryKey: ['genres'],
@@ -73,7 +88,7 @@ const useTrackPageState = () => {
       'tracks',
       { page, limit, sort, filter, search: debouncedSearchTerm },
     ],
-    queryFn: () => loadTracks(),
+    queryFn: loadTracks,
   });
 
   const deleteMutation = useMutation({
@@ -114,20 +129,20 @@ const useTrackPageState = () => {
     onSuccess: () => queryClient.invalidateQueries(['tracks']),
   });
 
-  const handleSortChange = (e: SelectChangeEvent<string>) => {
-    setTimeout(() => {
-      const value = e.target.value;
-      setSort(value);
-      setParam('sort', value);
-      setPage(1);
-    }, 0);
+  const handleSortChange = async (e: SelectChangeEvent<string>) => {
+    const value = e.target.value;
+    setSort(value);
+    setParam('sort', value);
+    setPage(1);
+    setParam('page', '1');
   };
 
   const handleFilterChange = (type: string, value: string) => {
-    const actualValue = value === 'ALL' ? '' : value;
+    const actualValue = value === 'All' ? '' : value;
     setFilter((prev) => ({ ...prev, [type]: actualValue }));
     setParam(type, actualValue);
     setPage(1);
+    setParam('page', '1');
   };
 
   const handleSelectTrack = (id: string) => {

@@ -6,10 +6,10 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from '@mui/material';
-import SearchBar from '../SearchBar/SearchBar.tsx';
+import SearchBar from '../SearchBar/SearchBar';
 import { useEffect } from 'react';
-import { getParam } from '../../services/api/urlParams.ts';
-import { O } from '@mobily/ts-belt';
+import { getParam } from '../../services/api/urlParams';
+import { O, pipe } from '@mobily/ts-belt';
 
 const FiltersSection = ({
   searchTerm,
@@ -22,10 +22,16 @@ const FiltersSection = ({
   tracksData,
 }) => {
   useEffect(() => {
-    O.map(getParam('search'), onSearchChange);
-    O.map(getParam('sort'), onSortChange);
-    O.map(getParam('genre'), (value) => onFilterChange('genre', value));
-    O.map(getParam('artist'), (value) => onFilterChange('artist', value));
+    pipe(getParam('search'), O.map(onSearchChange));
+    pipe(getParam('sort'), O.map(onSortChange));
+    pipe(
+      getParam('genre'),
+      O.map((value) => onFilterChange('genre', value))
+    );
+    pipe(
+      getParam('artist'),
+      O.map((value) => onFilterChange('artist', value))
+    );
   }, []);
 
   return (

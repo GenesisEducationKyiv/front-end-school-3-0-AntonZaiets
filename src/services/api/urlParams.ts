@@ -1,9 +1,6 @@
-import * as Belt from '@mobily/ts-belt';
-
-export const getParam = (param: string): Belt.O.Option<string> => {
-  return Belt.O.fromNullable(
-    new URLSearchParams(window.location.search).get(param)
-  );
+import { O } from '@mobily/ts-belt';
+export const getParam = (param: string): O.Option<string> => {
+  return O.fromNullable(new URLSearchParams(window.location.search).get(param));
 };
 
 export const setParam = (key: string, value: string) => {
