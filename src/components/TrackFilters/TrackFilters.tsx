@@ -7,9 +7,6 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
-import { useEffect } from 'react';
-import { getParam } from '../../services/api/urlParams';
-import { O, pipe } from '@mobily/ts-belt';
 
 const FiltersSection = ({
   searchTerm,
@@ -21,19 +18,11 @@ const FiltersSection = ({
   genres,
   tracksData,
 }) => {
-  useEffect(() => {
-    pipe(getParam('search'), O.map(onSearchChange));
-    pipe(getParam('sort'), O.map(onSortChange));
-    pipe(
-      getParam('genre'),
-      O.map((value) => onFilterChange('genre', value))
-    );
-    pipe(
-      getParam('artist'),
-      O.map((value) => onFilterChange('artist', value))
-    );
-  }, []);
-
+  const menuItems = [
+    { label: 'Title', value: 'title', testId: 'sort-option-title' },
+    { label: 'Artist', value: 'artist', testId: 'sort-option-artist' },
+    { label: 'Album', value: 'album', testId: 'sort-option-album' },
+  ];
   return (
     <Box display="flex" gap={2} mb={3} flexWrap="wrap">
       <SearchBar
@@ -49,15 +38,15 @@ const FiltersSection = ({
           label="Sort By"
           data-testid="sort-select"
         >
-          <MenuItem value="title" data-testid="sort-option-title">
-            Title
-          </MenuItem>
-          <MenuItem value="artist" data-testid="sort-option-artist">
-            Artist
-          </MenuItem>
-          <MenuItem value="album" data-testid="sort-option-album">
-            Album
-          </MenuItem>
+          {menuItems.map((item) => (
+            <MenuItem
+              key={item.value}
+              value={item.value}
+              data-testid={item.testId}
+            >
+              {item.label}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
       <FormControl sx={{ minWidth: 120 }}>
