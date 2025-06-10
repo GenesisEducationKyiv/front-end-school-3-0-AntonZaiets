@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteTrack, updateTrack, createTrack } from '../services/api/tracks';
+import { TApiTrackPayload } from '../services/api/types.ts';
 
 export const useDeleteTrackMutation = () => {
   const queryClient = useQueryClient();
@@ -37,19 +38,8 @@ export const useCreateTrackMutation = () => {
 export const useUpdateTrackMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: string;
-      data: {
-        title: string;
-        artist: string;
-        album?: string;
-        genres: string[];
-        coverImage?: string;
-      };
-    }) => updateTrack(id, data),
+    mutationFn: ({ id, data }: { id: string; data: TApiTrackPayload }) =>
+      updateTrack(id, data),
     onSuccess: () => queryClient.invalidateQueries(['tracks']),
   });
 };

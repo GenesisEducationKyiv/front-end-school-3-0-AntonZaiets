@@ -3,9 +3,7 @@ import { SelectChangeEvent } from '@mui/material';
 import { setParam, getParam } from '../services/api/urlParams.ts';
 import { O, pipe } from '@mobily/ts-belt';
 import { useDebounce } from '../hooks';
-
 import { useTracksQuery, useGenresQuery } from '../hooks';
-
 import {
   useDeleteTrackMutation,
   useDeleteMultipleTracksMutation,
@@ -19,27 +17,13 @@ const useTrackPageState = () => {
   const rawGenreParam = getParam('genre');
   const rawArtistParam = getParam('artist');
   const rawSearchParam = getParam('search');
-
-  const [page, setPage] = useState<number>(() =>
-    pipe<O.Option<string>, O.Option<number>, number>(
-      rawPageParam,
-      O.flatMap((p) => {
-        const parsed = parseInt(p, 10);
-        return isNaN(parsed) ? O.None : O.Some(parsed);
-      }),
-      O.getWithDefault(1)
-    )
-  );
-  const [sort, setSort] = useState(() =>
-    pipe(rawSortParam, O.getWithDefault('title'))
-  );
-  const [filter, setFilter] = useState<Record<string, string>>(() => ({
-    genre: pipe(rawGenreParam, O.getWithDefault('')),
-    artist: pipe(rawArtistParam, O.getWithDefault('')),
-  }));
-  const [searchTerm, setSearchTerm] = useState(() =>
-    pipe(rawSearchParam, O.getWithDefault(''))
-  );
+  const [page, setPage] = useState<number>(1);
+  const [sort, setSort] = useState('title');
+  const [filter, setFilter] = useState<Record<string, string>>({
+    genre: '',
+    artist: '',
+  });
+  const [searchTerm, setSearchTerm] = useState('');
   const [limit] = useState(10);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTrackId, setEditingTrackId] = useState<string | null>(null);
@@ -50,6 +34,17 @@ const useTrackPageState = () => {
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   useEffect(() => {
+    setPage(
+      pipe<O.Option<string>, O.Option<number>, number>(
+        rawPageParam,
+        O.flatMap((p) => {
+          const parsed = parseInt(p, 10);
+          return isNaN(parsed) ? O.None : O.Some(parsed);
+        }),
+        O.getWithDefault(1)
+      )
+    );
+
     pipe(rawSearchParam, O.map(setSearchTerm));
     pipe(rawSortParam, O.map(setSort));
     pipe(
