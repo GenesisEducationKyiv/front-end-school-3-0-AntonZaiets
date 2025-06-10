@@ -7,6 +7,7 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
+import { MENU_ITEMS } from '../../constants/menuItems.ts';
 
 const FiltersSection = ({
   searchTerm,
@@ -18,11 +19,6 @@ const FiltersSection = ({
   genres,
   tracksData,
 }) => {
-  const menuItems = [
-    { label: 'Title', value: 'title', testId: 'sort-option-title' },
-    { label: 'Artist', value: 'artist', testId: 'sort-option-artist' },
-    { label: 'Album', value: 'album', testId: 'sort-option-album' },
-  ];
   return (
     <Box display="flex" gap={2} mb={3} flexWrap="wrap">
       <SearchBar
@@ -38,7 +34,7 @@ const FiltersSection = ({
           label="Sort By"
           data-testid="sort-select"
         >
-          {menuItems.map((item) => (
+          {MENU_ITEMS.map((item) => (
             <MenuItem
               key={item.value}
               value={item.value}
