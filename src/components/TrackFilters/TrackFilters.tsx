@@ -7,7 +7,7 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
-import { MENU_ITEMS } from './constants/menuItems.ts';
+import { MENU_ITEMS } from '../../constants/menuItems.ts';
 
 const FiltersSection = ({
   searchTerm,
