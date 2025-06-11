@@ -16,6 +16,7 @@ import { IUploadModal } from './Interface';
 import { AsyncResult } from '../../types/types.ts';
 import { handleError } from '../../services/api/handleError.ts';
 import { ok } from 'neverthrow';
+import { showToast } from '../../ui/ToastNotification';
 
 const UploadModal = ({
   open,
@@ -48,10 +49,12 @@ const UploadModal = ({
       await uploadFileNameToBackend(trackId, url);
       await queryClient.invalidateQueries(['tracks']);
       onUploadSuccess?.();
+      showToast('tracks', 'uploadSuccess');
       onClose();
 
       return ok(undefined);
     } catch (err) {
+      showToast('tracks', 'uploadError', 'error');
       return handleError(err);
     } finally {
       setIsUploading(false);
