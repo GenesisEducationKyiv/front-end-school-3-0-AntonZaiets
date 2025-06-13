@@ -1,5 +1,5 @@
 import { Container, Paper } from '@mui/material';
-import useTrackPageState from '../../hooks/useTrackPageState.ts';
+import { useTrackPageState } from '../../hooks';
 import HeaderSection from '../../components/HeaderSection/HeaderSection.tsx';
 import FiltersAndBulk from './components/FiltersAndBulk/FiltersAndBulk.tsx';
 import TrackModals from './components/TrackModals/TrackModals.tsx';
