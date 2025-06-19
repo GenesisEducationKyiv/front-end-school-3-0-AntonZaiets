@@ -6,7 +6,6 @@ import {
   TrackResponseSchema,
 } from '../../../schemas/trackSchemas.ts';
 
-// Mock axios instance
 vi.mock('../axios/config', () => ({
   default: {
     get: vi.fn(),
@@ -14,7 +13,6 @@ vi.mock('../axios/config', () => ({
   },
 }));
 
-// Mock TrackSchema
 vi.mock('../../../schemas/trackSchemas', () => ({
   TrackSchema: {
     safeParse: vi.fn(),
@@ -29,10 +27,8 @@ describe('Tracks Service', () => {
     vi.clearAllMocks();
   });
 
-  // Blackbox test for fetchTracks
   describe('fetchTracks', () => {
     it('should fetch tracks with pagination and filters', async () => {
-      // Arrange
       const mockResponse = {
         data: {
           data: [
@@ -58,7 +54,6 @@ describe('Tracks Service', () => {
         data: mockResponse.data,
       });
 
-      // Act
       const result = await fetchTracks(
         1,
         10,
@@ -67,7 +62,6 @@ describe('Tracks Service', () => {
         'test'
       );
 
-      // Assert
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         expect(result.value).toEqual({
@@ -88,10 +82,8 @@ describe('Tracks Service', () => {
     });
   });
 
-  // Whitebox test for createTrack
   describe('createTrack', () => {
     it('should create a track and validate response', async () => {
-      // Arrange
       const mockTrackData = {
         title: 'New Track',
         artist: 'New Artist',
@@ -113,10 +105,8 @@ describe('Tracks Service', () => {
         data: mockResponse.data,
       });
 
-      // Act
       const result = await createTrack(mockTrackData);
 
-      // Assert
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         expect(result.value).toEqual(mockResponse.data);
@@ -126,7 +116,6 @@ describe('Tracks Service', () => {
     });
 
     it('should handle validation errors', async () => {
-      // Arrange
       const mockTrackData = {
         title: 'New Track',
         artist: 'New Artist',
@@ -148,10 +137,8 @@ describe('Tracks Service', () => {
         error: { message: 'Validation error' },
       });
 
-      // Act
       const result = await createTrack(mockTrackData);
 
-      // Assert
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
         expect(result.error.message).toContain('Validation error');
