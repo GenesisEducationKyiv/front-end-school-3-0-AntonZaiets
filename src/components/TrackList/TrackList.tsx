@@ -9,7 +9,7 @@ const TracksListSection = ({
   onEditTrack,
   onDeleteTrack,
 }) => (
-  <Grid container spacing={3} data-testid="tracks-list">
+  <Grid container spacing={3} data-testid="tracks-list" direction="column">
     {tracksData?.tracks.map((track) => (
       <Grid item xs={12} key={track.id} data-testid={`track-item-${track.id}`}>
         <TrackItem
