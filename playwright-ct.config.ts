@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/experimental-ct-react';
 
 export default defineConfig({
-  testDir: './src/components/TrackForm/__ct__',
+  testMatch: '**/__ct__/**/*.spec.{ts,tsx}',
   snapshotDir: './__snapshots__',
   timeout: 30 * 1000,
   fullyParallel: true,
