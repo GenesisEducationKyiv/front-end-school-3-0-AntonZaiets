@@ -2,7 +2,6 @@ import { defineConfig, devices } from '@playwright/experimental-ct-react';
 
 export default defineConfig({
   testMatch: '**/__ct__/**/*.spec.{ts,tsx}',
-  snapshotDir: './__snapshots__',
   timeout: 30 * 1000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,

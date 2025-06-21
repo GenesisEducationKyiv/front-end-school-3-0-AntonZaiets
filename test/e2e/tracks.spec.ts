@@ -13,7 +13,6 @@ test.describe('Tracks Page E2E', () => {
     await page.goto('/tracks');
     await page.waitForLoadState('networkidle');
     await page.waitForSelector('body', { timeout: 10000 });
-    await page.screenshot({ path: 'debug-page.png' });
   });
 
   test('should load the page and show basic structure', async ({ page }) => {
