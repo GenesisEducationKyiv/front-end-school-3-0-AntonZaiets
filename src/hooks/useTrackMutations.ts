@@ -18,7 +18,7 @@ export const useDeleteMultipleTracksMutation = ({
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (ids: string[]) => {
-      await Promise.all(ids.map((id) => deleteTrack(+id)));
+      await Promise.all(ids.map((id) => deleteTrack(id)));
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['tracks']);
