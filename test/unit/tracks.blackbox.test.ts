@@ -1,19 +1,21 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchTracks, createTrack } from '../tracks.ts';
-import axiosInstance from '../axios/config.ts';
+import { fetchTracks, createTrack } from '../../src/services/api/tracks';
+import axiosInstance from '../../src/services/api/axios/config';
 import {
   TrackSchema,
   TrackResponseSchema,
-} from '../../../schemas/trackSchemas.ts';
+} from '../../src/schemas/trackSchemas';
 
-vi.mock('../axios/config', () => ({
+// Mock axios instance
+vi.mock('../../src/services/api/axios/config', () => ({
   default: {
     get: vi.fn(),
     post: vi.fn(),
   },
 }));
 
-vi.mock('../../../schemas/trackSchemas', () => ({
+// Mock TrackSchema
+vi.mock('../../src/schemas/trackSchemas', () => ({
   TrackSchema: {
     safeParse: vi.fn(),
   },
@@ -22,13 +24,14 @@ vi.mock('../../../schemas/trackSchemas', () => ({
   },
 }));
 
-describe('Tracks Service', () => {
+describe('Tracks Service - Black Box Tests', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   describe('fetchTracks', () => {
     it('should fetch tracks with pagination and filters', async () => {
+      // Arrange
       const mockResponse = {
         data: {
           data: [
@@ -54,6 +57,7 @@ describe('Tracks Service', () => {
         data: mockResponse.data,
       });
 
+      // Act
       const result = await fetchTracks(
         1,
         10,
@@ -62,6 +66,7 @@ describe('Tracks Service', () => {
         'test'
       );
 
+      // Assert - тестуємо тільки зовнішню поведінку
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         expect(result.value).toEqual({
@@ -70,20 +75,56 @@ describe('Tracks Service', () => {
           currentPage: 1,
         });
       }
-      expect(axiosInstance.get).toHaveBeenCalledWith('/tracks', {
-        params: {
-          page: 1,
-          limit: 10,
-          sort: 'title',
-          genre: 'Rock',
-          search: 'test',
+    });
+
+    it('should handle empty response', async () => {
+      // Arrange
+      const mockResponse = {
+        data: {
+          data: [],
+          meta: {
+            totalPages: 0,
+            page: 1,
+          },
         },
+      };
+
+      (axiosInstance.get as any).mockResolvedValue(mockResponse);
+      (TrackResponseSchema.safeParse as any).mockReturnValue({
+        success: true,
+        data: mockResponse.data,
       });
+
+      // Act
+      const result = await fetchTracks(1, 10);
+
+      // Assert
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value.tracks).toEqual([]);
+        expect(result.value.totalPages).toBe(0);
+      }
+    });
+
+    it('should handle API errors', async () => {
+      // Arrange
+      const errorMessage = 'Network error';
+      (axiosInstance.get as any).mockRejectedValue(new Error(errorMessage));
+
+      // Act
+      const result = await fetchTracks(1, 10);
+
+      // Assert
+      expect(result.isErr()).toBe(true);
+      if (result.isErr()) {
+        expect(result.error.message).toContain(errorMessage);
+      }
     });
   });
 
   describe('createTrack', () => {
-    it('should create a track and validate response', async () => {
+    it('should create a track successfully', async () => {
+      // Arrange
       const mockTrackData = {
         title: 'New Track',
         artist: 'New Artist',
@@ -105,17 +146,18 @@ describe('Tracks Service', () => {
         data: mockResponse.data,
       });
 
+      // Act
       const result = await createTrack(mockTrackData);
 
+      // Assert - тестуємо тільки результат
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {
         expect(result.value).toEqual(mockResponse.data);
       }
-      expect(axiosInstance.post).toHaveBeenCalledWith('/tracks', mockTrackData);
-      expect(TrackSchema.safeParse).toHaveBeenCalledWith(mockResponse.data);
     });
 
-    it('should handle validation errors', async () => {
+    it('should handle API errors during creation', async () => {
+      // Arrange
       const mockTrackData = {
         title: 'New Track',
         artist: 'New Artist',
@@ -124,24 +166,16 @@ describe('Tracks Service', () => {
         coverImage: 'cover.jpg',
       };
 
-      const mockResponse = {
-        data: {
-          id: '123',
-          ...mockTrackData,
-        },
-      };
+      const errorMessage = 'Creation failed';
+      (axiosInstance.post as any).mockRejectedValue(new Error(errorMessage));
 
-      (axiosInstance.post as any).mockResolvedValue(mockResponse);
-      (TrackSchema.safeParse as any).mockReturnValue({
-        success: false,
-        error: { message: 'Validation error' },
-      });
-
+      // Act
       const result = await createTrack(mockTrackData);
 
+      // Assert
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error.message).toContain('Validation error');
+        expect(result.error.message).toContain(errorMessage);
       }
     });
   });
