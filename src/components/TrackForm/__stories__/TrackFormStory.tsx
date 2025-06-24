@@ -16,7 +16,7 @@ export interface TrackFormStoryProps {
   onClose?: () => void;
   onSubmit?: (data: TTrackFormData) => void;
   genres?: string[];
-  track?: any;
+  track?: unknown;
 }
 
 export function TrackFormStory(props: TrackFormStoryProps) {

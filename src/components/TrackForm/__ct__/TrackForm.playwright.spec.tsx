@@ -22,11 +22,17 @@ test('should render form fields correctly', async ({ mount, page }) => {
     />
   );
 
-  await expect(page.getByTestId('input-title')).toBeVisible();
-  await expect(page.getByTestId('input-artist')).toBeVisible();
-  await expect(page.getByTestId('input-album')).toBeVisible();
-  await expect(page.getByTestId('input-cover-image')).toBeVisible();
-  await expect(page.getByTestId('genre-selector')).toBeVisible();
+  const titleInput = page.locator('[data-testid="input-title"]');
+  const artistInput = page.locator('[data-testid="input-artist"]');
+  const albumInput = page.locator('[data-testid="input-album"]');
+  const coverImageInput = page.locator('[data-testid="input-cover-image"]');
+  const genreSelector = page.locator('[data-testid="genre-selector"]');
+
+  await expect(titleInput).toBeVisible();
+  await expect(artistInput).toBeVisible();
+  await expect(albumInput).toBeVisible();
+  await expect(coverImageInput).toBeVisible();
+  await expect(genreSelector).toBeVisible();
 });
 
 test('should handle form input and submission', async ({ mount, page }) => {
@@ -43,24 +49,30 @@ test('should handle form input and submission', async ({ mount, page }) => {
     />
   );
 
-  await page.getByTestId('input-title').fill('New Track');
-  await page.getByTestId('input-artist').fill('New Artist');
-  await page.getByTestId('input-album').fill('New Album');
-  await page
-    .getByTestId('input-cover-image')
-    .fill('https://example.com/new-cover.jpg');
+  const titleInput = page.locator('[data-testid="input-title"]');
+  const artistInput = page.locator('[data-testid="input-artist"]');
+  const albumInput = page.locator('[data-testid="input-album"]');
+  const coverImageInput = page.locator('[data-testid="input-cover-image"]');
+  const genreSelector = page.locator('[data-testid="genre-selector"]');
+  const submitButton = page.locator('[data-testid="submit-button"]');
 
-  // Select genres
-  const genreInput = await page.getByTestId('genre-selector').locator('input');
+  await titleInput.fill('New Track');
+  await artistInput.fill('New Artist');
+  await albumInput.fill('New Album');
+  await coverImageInput.fill('https://example.com/new-cover.jpg');
+
+  const genreInput = genreSelector.locator('input');
   await genreInput.fill('Rock');
-  await page.getByText('Rock').click();
+  const rockOption = page.locator('text=Rock');
+  await rockOption.click();
   await genreInput.fill('Pop');
-  await page.getByText('Pop').click();
+  const popOption = page.locator('text=Pop');
+  await popOption.click();
 
-  await page.getByTestId('submit-button').click();
+  await submitButton.click();
 
   await expect.poll(() => submittedData).not.toBeNull();
-  await expect(submittedData).toMatchObject({
+  expect(submittedData).toMatchObject({
     title: 'New Track',
     artist: 'New Artist',
     album: 'New Album',
@@ -83,7 +95,8 @@ test('should handle form cancellation', async ({ mount, page }) => {
     />
   );
 
-  await page.getByTestId('cancel-button').click();
+  const cancelButton = page.locator('[data-testid="cancel-button"]');
+  await cancelButton.click();
   await expect.poll(() => cancelled).toBe(true);
 });
 
@@ -98,62 +111,55 @@ test('should handle edit mode', async ({ mount, page }) => {
     />
   );
 
-  await expect(page.getByTestId('input-title')).toHaveValue('Test Track');
-  await expect(page.getByTestId('input-artist')).toHaveValue('Test Artist');
-  await expect(page.getByTestId('input-album')).toHaveValue('Test Album');
-  await expect(page.getByTestId('input-cover-image')).toHaveValue(
+  const titleInput = page.locator('[data-testid="input-title"]');
+  const artistInput = page.locator('[data-testid="input-artist"]');
+  const albumInput = page.locator('[data-testid="input-album"]');
+  const coverImageInput = page.locator('[data-testid="input-cover-image"]');
+  const modal = page.locator('[data-testid="track-form-modal"]');
+  const genreSelector = page.locator('[data-testid="genre-selector"]');
+  const submitButton = page.locator('[data-testid="submit-button"]');
+
+  await expect(titleInput).toHaveValue('Test Track');
+  await expect(artistInput).toHaveValue('Test Artist');
+  await expect(albumInput).toHaveValue('Test Album');
+  await expect(coverImageInput).toHaveValue(
     'https://example.com/test-cover.jpg'
   );
 
-  await page.getByTestId('input-title').fill('Edited Track');
-  await expect(page.getByTestId('input-title')).toHaveValue('Edited Track');
+  await titleInput.fill('Edited Track');
+  await expect(titleInput).toHaveValue('Edited Track');
 
-  // Клік по модалці для втрати фокусу
-  await page.getByTestId('track-form-modal').click();
+  await modal.click();
 
-  // Видалити жанр Pop (клік по кнопці видалення Chip)
-  const popDeleteBtn = await page
-    .getByTestId('genre-Pop')
-    .locator('svg')
-    .first();
+  const popDeleteBtn = page.locator('[data-testid="genre-Pop"] svg').first();
   await popDeleteBtn.click();
 
-  // Додати Jazz
-  await page.getByTestId('genre-selector').locator('input').fill('Jazz');
-  await page.getByText('Jazz').click();
+  const genreInput = genreSelector.locator('input');
+  await genreInput.fill('Jazz');
+  const jazzOption = page.locator('text=Jazz');
+  await jazzOption.click();
   await page.keyboard.press('Tab');
-  await expect(page.getByTestId('genre-Jazz')).toBeVisible();
+  await expect(page.locator('[data-testid="genre-Jazz"]')).toBeVisible();
 
-  // Сабміт
-  await page.getByTestId('submit-button').click();
+  await submitButton.click();
 
-  // Перевірка на відсутність валідаційних помилок
-  await expect(page.locator('text=required')).toHaveCount(0);
-  await expect(page.locator('text=Select at least one genre')).toHaveCount(0);
+  const requiredErrors = page.locator('[data-testid*="error-required"]');
+  const genreError = page.locator('[data-testid="error-genre"]');
+  await expect(requiredErrors).toHaveCount(0);
+  await expect(genreError).toHaveCount(0);
 
-  // Extract form values from the DOM after submit
-  const submittedData = await page.evaluate(() => {
-    const title = (
-      document.querySelector('[data-testid="input-title"]') as HTMLInputElement
-    )?.value;
-    const artist = (
-      document.querySelector('[data-testid="input-artist"]') as HTMLInputElement
-    )?.value;
-    const album = (
-      document.querySelector('[data-testid="input-album"]') as HTMLInputElement
-    )?.value;
-    const coverImage = (
-      document.querySelector(
-        '[data-testid="input-cover-image"]'
-      ) as HTMLInputElement
-    )?.value;
-    const genres = Array.from(
-      document.querySelectorAll('[data-testid^="genre-"]')
-    )
-      .map((el) => el.getAttribute('data-testid')?.replace('genre-', ''))
-      .filter((g) => g && g !== 'selector');
-    return { title, artist, album, coverImage, genres };
-  });
-  await expect(submittedData.title).toBe('Edited Track');
-  await expect(submittedData.genres).toContain('Jazz');
+  const submittedTitle = await titleInput.inputValue();
+  const submittedArtist = await artistInput.inputValue();
+  const submittedAlbum = await albumInput.inputValue();
+  const submittedCoverImage = await coverImageInput.inputValue();
+  const submittedGenres = await page
+    .locator('[data-testid^="genre-"]')
+    .filter({ hasNot: page.locator('[data-testid="genre-selector"]') })
+    .allTextContents();
+
+  expect(submittedTitle).toBe('Edited Track');
+  expect(submittedArtist).toBe('Test Artist');
+  expect(submittedAlbum).toBe('Test Album');
+  expect(submittedCoverImage).toBe('https://example.com/test-cover.jpg');
+  expect(submittedGenres).toContain('Jazz');
 });
