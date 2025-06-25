@@ -3,6 +3,7 @@ import { useTracksQuery, useGenresQuery, useDebounce } from '../../../../hooks';
 import FiltersSection from '../../../../components/TrackFilters/TrackFilters.tsx';
 import BulkActionsSection from '../../../../components/BulkActionsSection/BulkActionsSection.tsx';
 import { SelectChangeEvent } from '@mui/material';
+import { TFetchTracksResponse } from '../../../../services/api/types';
 
 const FiltersAndBulk = () => {
   const {
@@ -20,22 +21,20 @@ const FiltersAndBulk = () => {
   } = useTrackPageStore();
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
   const { data: genres } = useGenresQuery();
-  const { data: tracksData } = useTracksQuery({
-    page,
-    limit: 10,
-    sort,
-    filter,
-    search: debouncedSearchTerm,
-  });
+  const { data: tracksData = { tracks: [], totalPages: 1, currentPage: 1 } } =
+    useTracksQuery({
+      page,
+      limit: 10,
+      sort,
+      filter,
+      search: debouncedSearchTerm,
+    }) as { data: TFetchTracksResponse };
 
   const handleToggleSelectAll = () => {
     setSelectedTracks((prev) =>
-      prev.length ===
-      (tracksData && 'tracks' in tracksData ? tracksData.tracks.length : 0)
+      prev.length === tracksData.tracks.length
         ? []
-        : (tracksData && 'tracks' in tracksData
-            ? tracksData.tracks.map((t) => t.id)
-            : []) || []
+        : tracksData.tracks.map((t) => t.id)
     );
   };
 

@@ -37,7 +37,7 @@ const TrackModals = () => {
     filter,
     search: debouncedSearchTerm,
   });
-  const { data: genres } = useGenresQuery();
+  const { data: genres = [] } = useGenresQuery();
   const createTrackMutation = useCreateTrackMutation();
   const updateTrackMutation = useUpdateTrackMutation();
   const deleteMutation = useDeleteTrackMutation();
@@ -50,6 +50,18 @@ const TrackModals = () => {
       ? tracksData.tracks.find((t) => t.id === editingTrackId)
       : undefined;
 
+  const handleSubmit = (formData: any) => {
+    if (editingTrackId) {
+      updateTrackMutation.mutate({
+        id: editingTrackId,
+        data: formData,
+      });
+    } else {
+      createTrackMutation.mutate(formData);
+    }
+    closeModal();
+  };
+
   return (
     <>
       {isModalOpen && (
@@ -57,19 +69,9 @@ const TrackModals = () => {
           data-testid="track-form-modal"
           open={isModalOpen}
           onClose={closeModal}
-          onSubmit={(formData) => {
-            if (editingTrackId) {
-              updateTrackMutation.mutate({
-                id: editingTrackId,
-                data: formData,
-              });
-            } else {
-              createTrackMutation.mutate(formData);
-            }
-            closeModal();
-          }}
+          onSubmit={handleSubmit}
           track={editingTrack}
-          genres={genres || []}
+          genres={genres}
         />
       )}
       <ConfirmDialog

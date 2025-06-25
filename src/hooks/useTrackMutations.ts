@@ -1,5 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteTrack, updateTrack, createTrack } from '../services/api/tracks';
+import {
+  deleteTrack,
+  updateTrack,
+  createTrack,
+  deleteTracksBulk,
+} from '../services/api/tracks';
 import { TApiTrackPayload } from '../services/api/types.ts';
 
 export const useDeleteTrackMutation = () => {
@@ -17,9 +22,7 @@ export const useDeleteMultipleTracksMutation = ({
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (ids: string[]) => {
-      await Promise.all(ids.map((id) => deleteTrack(id)));
-    },
+    mutationFn: deleteTracksBulk,
     onSuccess: () => {
       queryClient.invalidateQueries(['tracks']);
       onComplete?.();

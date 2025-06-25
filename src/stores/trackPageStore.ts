@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { setParam } from '../services/api/urlParams';
 import { TrackPageActions, TrackPageState } from './types.ts';
 
-const useTrackPageStore = create<TrackPageState & TrackPageActions>((set) => ({
+const initialTrackPageState: TrackPageState = {
   page: 1,
   sort: 'title',
   filter: { genre: '', artist: '' },
@@ -13,7 +13,10 @@ const useTrackPageStore = create<TrackPageState & TrackPageActions>((set) => ({
   selectedTracks: [],
   isSelectMode: false,
   isBulkConfirmOpen: false,
+};
 
+const useTrackPageStore = create<TrackPageState & TrackPageActions>((set) => ({
+  ...initialTrackPageState,
   setPage: (page) => {
     set({ page });
     setParam('page', String(page));

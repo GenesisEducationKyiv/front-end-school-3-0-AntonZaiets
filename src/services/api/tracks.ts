@@ -110,3 +110,12 @@ export const uploadFileNameToBackend = async (
     return handleError(e);
   }
 };
+
+export const deleteTracksBulk = async (ids: string[]): AsyncResult<void> => {
+  try {
+    await axiosInstance.post(apiEndpoints.delete, { ids });
+    return ok(undefined);
+  } catch (e) {
+    return handleError(e);
+  }
+};

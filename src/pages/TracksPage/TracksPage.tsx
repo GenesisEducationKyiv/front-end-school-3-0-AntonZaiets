@@ -9,6 +9,10 @@ const TrackPage = () => {
   const { isSelectMode, setIsSelectMode, openNewTrackModal } =
     useTrackPageStore();
 
+  const handleToggleSelectMode = () => {
+    setIsSelectMode(!isSelectMode);
+  };
+
   return (
     <Container
       data-testid="track-page-container"
@@ -35,7 +39,7 @@ const TrackPage = () => {
         <HeaderSection
           data-testid="header-section"
           isSelectMode={isSelectMode}
-          onToggleSelectMode={() => setIsSelectMode(!isSelectMode)}
+          onToggleSelectMode={handleToggleSelectMode}
           onOpenModal={openNewTrackModal}
         />
         <FiltersAndBulk />
