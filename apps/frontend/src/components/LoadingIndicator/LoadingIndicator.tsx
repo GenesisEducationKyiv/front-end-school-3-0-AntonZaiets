@@ -5,6 +5,8 @@ const LoadingIndicator = ({
   message = 'Loading...',
   size = 40,
   color = 'primary',
+  width,
+  height,
 }: ILoadingIndicator) => {
   return (
     <Box
@@ -14,6 +16,8 @@ const LoadingIndicator = ({
       justifyContent="center"
       p={4}
       data-testid="loading-indicator"
+      width={width}
+      height={height}
     >
       <CircularProgress
         size={size}

@@ -1,7 +1,7 @@
 import { Dropbox } from 'dropbox';
-import { env } from '../../../config/config.ts';
+import { config } from '../../config/env.ts';
 
-const dbx = new Dropbox({ accessToken: env.ACCESS_TOKEN });
+const dbx = new Dropbox({ accessToken: config.api.dropboxAppKey });
 
 export const uploadFile = async (file: File, path: string) => {
   const contents = await file.arrayBuffer();

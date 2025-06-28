@@ -1,8 +1,8 @@
 import axios from 'axios';
-import { env } from '../../../../config/config.ts';
+import { config } from '../../../config/env';
 
 const axiosInstance = axios.create({
-  baseURL: env.API_URL,
+  baseURL: config.api.baseUrl,
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
@@ -12,7 +12,9 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('Axios error:', error);
+    if (config.dev.mode) {
+      console.error('Axios error:', error);
+    }
     return Promise.reject(error);
   }
 );
