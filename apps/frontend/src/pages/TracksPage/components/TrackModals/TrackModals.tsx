@@ -1,5 +1,6 @@
+import { Suspense } from 'react';
 import TrackForm from '../../../../components/TrackForm/TrackForm.tsx';
-import ConfirmDialog from '../../../../components/ConfirmDialog/ConfirmDialog.tsx';
+import { LazyConfirmDialog } from '../../../../components/LazyComponents/LazyComponents.tsx';
 import LoadingIndicator from '../../../../components/LoadingIndicator/LoadingIndicator.tsx';
 
 const TrackModals = ({ state }) => (
@@ -30,27 +31,29 @@ const TrackModals = ({ state }) => (
         genres={state.genres || []}
       />
     )}
-    <ConfirmDialog
-      data-testid="confirm-delete-dialog"
-      open={!!state.deletingTrackId}
-      onClose={() => state.setDeletingTrackId(null)}
-      onConfirm={() => {
-        state.deleteMutation.mutate(+state.deletingTrackId!);
-        state.setDeletingTrackId(null);
-      }}
-      title="Delete Track"
-      message="Are you sure you want to delete this track?"
-    />
-    <ConfirmDialog
-      data-testid="confirm-bulk-delete-dialog"
-      open={state.isBulkConfirmOpen}
-      onClose={() => state.setIsBulkConfirmOpen(false)}
-      onConfirm={() =>
-        state.deleteMultipleMutation.mutate(state.selectedTracks)
-      }
-      title="Delete Selected Tracks"
-      message="Are you sure you want to delete the selected tracks?"
-    />
+    <Suspense fallback={<LoadingIndicator size={24} />}>
+      <LazyConfirmDialog
+        data-testid="confirm-delete-dialog"
+        open={!!state.deletingTrackId}
+        onClose={() => state.setDeletingTrackId(null)}
+        onConfirm={() => {
+          state.deleteMutation.mutate(+state.deletingTrackId!);
+          state.setDeletingTrackId(null);
+        }}
+        title="Delete Track"
+        message="Are you sure you want to delete this track?"
+      />
+      <LazyConfirmDialog
+        data-testid="confirm-bulk-delete-dialog"
+        open={state.isBulkConfirmOpen}
+        onClose={() => state.setIsBulkConfirmOpen(false)}
+        onConfirm={() =>
+          state.deleteMultipleMutation.mutate(state.selectedTracks)
+        }
+        title="Delete Selected Tracks"
+        message="Are you sure you want to delete the selected tracks?"
+      />
+    </Suspense>
     {state.isLoading && <LoadingIndicator />}
   </>
 );
