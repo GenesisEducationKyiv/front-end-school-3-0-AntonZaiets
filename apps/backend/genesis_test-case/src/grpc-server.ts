@@ -29,7 +29,6 @@ import {
   DeleteTrackFileResponse
 } from './types/grpc';
 
-// Load proto file
 const PROTO_PATH = path.resolve(__dirname, 'music_service.proto');
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
@@ -42,7 +41,6 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 
 const musicProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
-// Helper function to convert Track to gRPC Track
 const convertTrackToGrpc = (track: any): any => ({
   id: track.id,
   title: track.title,
@@ -54,7 +52,6 @@ const convertTrackToGrpc = (track: any): any => ({
   audio_file: track.audioFile || ''
 });
 
-// Genre Service Implementation
 const genreService: IGenreService = {
   getAllGenres: async (call: any, callback: any) => {
     try {
@@ -75,11 +72,9 @@ const genreService: IGenreService = {
   }
 };
 
-// Track Service Implementation
 const trackService: ITrackService = {
   getAllTracks: async (call: any, callback: any) => {
     try {
-      // Add proper default values and null checks
       const request = call.request || {};
       console.log('gRPC server received request:', request);
       
@@ -91,8 +86,7 @@ const trackService: ITrackService = {
       const genres = request.genres || [];
       
       console.log('gRPC server extracted params:', { page, limit, search, sort, sortOrder, genres });
-      
-      // Convert genres array to single genre for filtering (take first one)
+
       const genre = genres.length > 0 ? genres[0] : '';
       
       const query = { page, limit, search, sort, order: sortOrder, genre };
@@ -329,8 +323,7 @@ const trackService: ITrackService = {
         });
         return;
       }
-      
-      // Validate file type
+
       const allowedExtensions = ['.mp3', '.wav'];
       const fileExtension = path.extname(filename).toLowerCase();
       if (!allowedExtensions.includes(fileExtension)) {
@@ -340,9 +333,8 @@ const trackService: ITrackService = {
         });
         return;
       }
-      
-      // Check file size (10MB limit)
-      const maxSize = 10 * 1024 * 1024; // 10MB
+
+      const maxSize = 10 * 1024 * 1024;
       if (data.length > maxSize) {
         callback({
           code: grpc.status.INVALID_ARGUMENT,
@@ -350,8 +342,7 @@ const trackService: ITrackService = {
         });
         return;
       }
-      
-      // Save file and update track
+
       const fileName = await saveAudioFile(id, filename, Buffer.from(data));
       const updatedTrack = await updateTrack(id, { audioFile: fileName });
       
@@ -429,25 +420,20 @@ const trackService: ITrackService = {
   }
 };
 
-// Create gRPC server
 const server = new grpc.Server();
 
-// Add services to server
 server.addService(musicProto.music.GenreService.service, genreService as any);
 server.addService(musicProto.music.TrackService.service, trackService as any);
 
-// Start server
 const PORT = process.env.GRPC_PORT || 50051;
 server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (err, port) => {
   if (err) {
     console.error('Failed to bind gRPC server:', err);
     return;
   }
-  
-  server.start();
+
   console.log(`gRPC server running on port ${port}`);
-  
-  // Start WebSocket server
+
   startWSServer(8081);
 });
 

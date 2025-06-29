@@ -7,17 +7,14 @@ import * as path from 'path';
 const app = express();
 const PORT = process.env.GRPC_WEB_PORT || 8080;
 
-// CORS middleware
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000'],
   credentials: true
 }));
 
-// JSON parsing middleware
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// Load proto file
 const PROTO_PATH = path.resolve(__dirname, 'music_service.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
   keepCase: true,
@@ -29,7 +26,6 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
 
 const musicProto = grpc.loadPackageDefinition(packageDefinition) as any;
 
-// Create gRPC client
 const grpcClient = new musicProto.music.TrackService(
   'localhost:50051',
   grpc.credentials.createInsecure()
@@ -40,7 +36,6 @@ const genreClient = new musicProto.music.GenreService(
   grpc.credentials.createInsecure()
 );
 
-// Helper function to convert gRPC call to Promise
 function grpcCall(client: any, method: string, request: any): Promise<any> {
   return new Promise((resolve, reject) => {
     client[method](request, (error: any, response: any) => {
@@ -53,7 +48,6 @@ function grpcCall(client: any, method: string, request: any): Promise<any> {
   });
 }
 
-// Genre Service endpoints
 app.post('/music.GenreService/GetAllGenres', async (req, res) => {
   try {
     console.log('GetAllGenres request body:', req.body);
@@ -73,7 +67,6 @@ app.post('/music.GenreService/GetAllGenres', async (req, res) => {
   }
 });
 
-// Track Service endpoints
 app.post('/music.TrackService/GetAllTracks', async (req, res) => {
   try {
     console.log('GetAllTracks request body:', req.body);
@@ -156,12 +149,10 @@ app.post('/music.TrackService/DeleteTrackFile', async (req, res) => {
   }
 });
 
-// Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'OK', service: 'gRPC-Web Proxy' });
 });
 
-// Start server
 app.listen(PORT, () => {
   console.log(`gRPC-Web proxy running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);

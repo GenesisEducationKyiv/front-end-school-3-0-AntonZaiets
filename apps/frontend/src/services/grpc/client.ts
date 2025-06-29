@@ -18,10 +18,13 @@ import {
   DeleteTrackFileRequest,
   DeleteTrackFileResponse,
 } from './types';
-import { buildUrl } from './endpoints';
-import { GRPC_SERVICES, GRPC_METHODS, DEFAULT_GRPC_HOST, GRPC_HEADERS } from './constants';
+import {
+  GRPC_SERVICES,
+  GRPC_METHODS,
+  DEFAULT_GRPC_HOST,
+  GRPC_HEADERS,
+} from './constants';
 
-// gRPC service client using HTTP requests to custom proxy
 export class MusicServiceClient {
   private host: string;
 
@@ -35,7 +38,7 @@ export class MusicServiceClient {
     request: any
   ): Promise<T> {
     const url = `${this.host}/${service}/${method}`;
-    
+
     const response = await fetch(url, {
       method: 'POST',
       headers: GRPC_HEADERS,
@@ -49,8 +52,9 @@ export class MusicServiceClient {
     return response.json();
   }
 
-  // Genre Service methods
-  async getAllGenres(request: GetAllGenresRequest): Promise<GetAllGenresResponse> {
+  async getAllGenres(
+    request: GetAllGenresRequest
+  ): Promise<GetAllGenresResponse> {
     return this.makeGrpcWebRequest<GetAllGenresResponse>(
       GRPC_SERVICES.GENRE_SERVICE,
       GRPC_METHODS.GENRE.GET_ALL_GENRES,
@@ -58,8 +62,9 @@ export class MusicServiceClient {
     );
   }
 
-  // Track Service methods
-  async getAllTracks(request: GetAllTracksRequest): Promise<GetAllTracksResponse> {
+  async getAllTracks(
+    request: GetAllTracksRequest
+  ): Promise<GetAllTracksResponse> {
     return this.makeGrpcWebRequest<GetAllTracksResponse>(
       GRPC_SERVICES.TRACK_SERVICE,
       GRPC_METHODS.TRACK.GET_ALL_TRACKS,
@@ -67,7 +72,9 @@ export class MusicServiceClient {
     );
   }
 
-  async getTrackBySlug(request: GetTrackBySlugRequest): Promise<GetTrackBySlugResponse> {
+  async getTrackBySlug(
+    request: GetTrackBySlugRequest
+  ): Promise<GetTrackBySlugResponse> {
     return this.makeGrpcWebRequest<GetTrackBySlugResponse>(
       GRPC_SERVICES.TRACK_SERVICE,
       GRPC_METHODS.TRACK.GET_TRACK_BY_SLUG,
@@ -99,7 +106,9 @@ export class MusicServiceClient {
     );
   }
 
-  async deleteMultipleTracks(request: DeleteMultipleTracksRequest): Promise<DeleteMultipleTracksResponse> {
+  async deleteMultipleTracks(
+    request: DeleteMultipleTracksRequest
+  ): Promise<DeleteMultipleTracksResponse> {
     return this.makeGrpcWebRequest<DeleteMultipleTracksResponse>(
       GRPC_SERVICES.TRACK_SERVICE,
       GRPC_METHODS.TRACK.DELETE_MULTIPLE_TRACKS,
@@ -107,7 +116,9 @@ export class MusicServiceClient {
     );
   }
 
-  async uploadTrackFile(request: UploadTrackFileRequest): Promise<UploadTrackFileResponse> {
+  async uploadTrackFile(
+    request: UploadTrackFileRequest
+  ): Promise<UploadTrackFileResponse> {
     return this.makeGrpcWebRequest<UploadTrackFileResponse>(
       GRPC_SERVICES.TRACK_SERVICE,
       GRPC_METHODS.TRACK.UPLOAD_TRACK_FILE,
@@ -115,11 +126,13 @@ export class MusicServiceClient {
     );
   }
 
-  async deleteTrackFile(request: DeleteTrackFileRequest): Promise<DeleteTrackFileResponse> {
+  async deleteTrackFile(
+    request: DeleteTrackFileRequest
+  ): Promise<DeleteTrackFileResponse> {
     return this.makeGrpcWebRequest<DeleteTrackFileResponse>(
       GRPC_SERVICES.TRACK_SERVICE,
       GRPC_METHODS.TRACK.DELETE_TRACK_FILE,
       request
     );
   }
-} 
+}

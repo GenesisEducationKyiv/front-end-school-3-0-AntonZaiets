@@ -1,7 +1,6 @@
 import { Track as GrpcTrack } from './types';
 import { ITrack } from '../../types/types';
 
-// Конвертація gRPC Track в ITrack
 export const convertGrpcTrackToITrack = (grpcTrack: GrpcTrack): ITrack => ({
   id: grpcTrack.id,
   title: grpcTrack.title,
@@ -12,14 +11,12 @@ export const convertGrpcTrackToITrack = (grpcTrack: GrpcTrack): ITrack => ({
   audioFile: grpcTrack.audio_file || '',
 });
 
-// Конвертація gRPC відповіді в TFetchTracksResponse
 export const convertGrpcTracksResponse = (grpcResponse: any) => ({
   tracks: grpcResponse.tracks.map(convertGrpcTrackToITrack),
   totalPages: grpcResponse.totalPages,
   currentPage: grpcResponse.page,
 });
 
-// Конвертація gRPC жанрів в масив рядків
 export const convertGrpcGenresToStrings = (grpcResponse: any): string[] => {
   return grpcResponse.genres || [];
-}; 
+};

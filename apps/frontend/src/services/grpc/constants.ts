@@ -1,5 +1,3 @@
-// gRPC service constants
-
 export const GRPC_SERVICES = {
   GENRE_SERVICE: 'music.GenreService',
   TRACK_SERVICE: 'music.TrackService',
@@ -25,4 +23,4 @@ export const DEFAULT_GRPC_HOST = 'http://localhost:8080';
 
 export const GRPC_HEADERS = {
   'Content-Type': 'application/json',
-} as const; 
+} as const;
