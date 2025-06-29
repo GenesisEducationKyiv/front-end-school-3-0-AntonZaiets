@@ -44,7 +44,7 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
   }, [track, reset]);
 
   return (
-    <Dialog open={open} onClose={onClose} data-testid="track-form-modal">
+    <Dialog open={Boolean(open)} onClose={onClose} data-testid="track-form-modal">
       <DialogTitle>
         {track ? 'Edit Track' : 'Create New Track'}
         <IconButton
@@ -105,22 +105,26 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
             control={control}
             rules={{
               validate: (value) =>
-                value.length > 0 || 'Select at least one genre',
+                (value && value.length > 0) ? true : 'Select at least one genre',
             }}
             render={({ field }) => (
               <Autocomplete
                 multiple
-                options={genres}
+                options={genres || []}
                 value={field.value || []}
                 onChange={(_, value) => field.onChange(value)}
                 renderTags={(value, getTagProps) =>
-                  value.map((option, index) => (
-                    <Chip
-                      {...getTagProps({ index })}
-                      label={option}
-                      data-testid={`genre-${option}`}
-                    />
-                  ))
+                  value.map((option, index) => {
+                    const { key, ...tagProps } = getTagProps({ index });
+                    return (
+                      <Chip
+                        key={key}
+                        {...tagProps}
+                        label={option}
+                        data-testid={`genre-${option}`}
+                      />
+                    );
+                  })
                 }
                 renderInput={(params) => (
                   <TextField

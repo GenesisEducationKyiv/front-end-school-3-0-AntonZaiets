@@ -1,6 +1,4 @@
 import { ITrack } from '../../types/types.ts';
-import { z } from 'zod';
-import { TrackPayloadSchema } from '../../schemas/trackSchemas.ts';
 
 export interface TFetchTracksResponse {
   tracks: ITrack[];
@@ -8,4 +6,10 @@ export interface TFetchTracksResponse {
   currentPage: number;
 }
 
-export type TApiTrackPayload = z.infer<typeof TrackPayloadSchema>;
+export interface TApiTrackPayload {
+  title: string;
+  artist: string;
+  album?: string;
+  genres: string[];
+  coverImage?: string;
+}

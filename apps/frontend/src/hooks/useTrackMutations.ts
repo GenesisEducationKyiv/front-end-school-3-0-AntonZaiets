@@ -1,12 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteTrack, updateTrack, createTrack } from '../services/api/tracks';
+import { deleteTrack, updateTrack, createTrack, deleteMultipleTracks, deleteTrackFile } from '../services/api/grpc-tracks';
 import { TApiTrackPayload } from '../services/api/types.ts';
 
 export const useDeleteTrackMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: deleteTrack,
-    onSuccess: () => queryClient.invalidateQueries(['tracks']),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tracks'] }),
   });
 };
 
@@ -17,11 +17,9 @@ export const useDeleteMultipleTracksMutation = ({
 }) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: async (ids: string[]) => {
-      await Promise.all(ids.map((id) => deleteTrack(+id)));
-    },
+    mutationFn: deleteMultipleTracks,
     onSuccess: () => {
-      queryClient.invalidateQueries(['tracks']);
+      queryClient.invalidateQueries({ queryKey: ['tracks'] });
       onComplete?.();
     },
   });
@@ -31,7 +29,7 @@ export const useCreateTrackMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: createTrack,
-    onSuccess: () => queryClient.invalidateQueries(['tracks']),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tracks'] }),
   });
 };
 
@@ -40,6 +38,14 @@ export const useUpdateTrackMutation = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: TApiTrackPayload }) =>
       updateTrack(id, data),
-    onSuccess: () => queryClient.invalidateQueries(['tracks']),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tracks'] }),
+  });
+};
+
+export const useDeleteTrackFileMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteTrackFile,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tracks'] }),
   });
 };

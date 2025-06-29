@@ -8,6 +8,18 @@ import {
 } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
 import { MENU_ITEMS } from './constants/menuItems.ts';
+import { TFetchTracksResponse } from '../../services/api/types';
+
+interface FiltersSectionProps {
+  searchTerm: string;
+  onSearchChange: (value: string) => void;
+  sort: string;
+  onSortChange: (value: string) => void;
+  filter: Record<string, string>;
+  onFilterChange: (key: string, value: string) => void;
+  genres: string[];
+  tracksData?: TFetchTracksResponse;
+}
 
 const FiltersSection = ({
   searchTerm,
@@ -18,7 +30,7 @@ const FiltersSection = ({
   onFilterChange,
   genres,
   tracksData,
-}) => {
+}: FiltersSectionProps) => {
   return (
     <Box display="flex" gap={2} mb={3} flexWrap="wrap">
       <SearchBar
@@ -57,7 +69,7 @@ const FiltersSection = ({
           data-testid="filter-genre"
         >
           <MenuItem value="All">All</MenuItem>
-          {genres?.map((genre) => (
+          {genres?.map((genre: string) => (
             <MenuItem
               key={genre}
               value={genre}
@@ -82,7 +94,8 @@ const FiltersSection = ({
           <MenuItem value="All" data-testid="artist-option-all">
             All
           </MenuItem>
-          {[...new Set(tracksData?.tracks.map((t) => t.artist))].map(
+          {tracksData?.tracks && tracksData.tracks.length > 0 && 
+            [...new Set(tracksData.tracks.map((t) => t.artist))].map(
             (artist) => (
               <MenuItem
                 key={artist}
@@ -92,7 +105,8 @@ const FiltersSection = ({
                 {artist}
               </MenuItem>
             )
-          )}
+            )
+          }
         </Select>
       </FormControl>
     </Box>

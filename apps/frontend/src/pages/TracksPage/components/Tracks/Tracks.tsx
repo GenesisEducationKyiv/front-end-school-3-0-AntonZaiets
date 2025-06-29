@@ -15,10 +15,19 @@ const Tracks = ({ state }) => {
         if (data.activeTrackTitle !== undefined) {
           setActiveTrackTitle(data.activeTrackTitle);
         }
-      } catch (e) {}
+      } catch (e) {
+        console.error('Error parsing WebSocket message:', e);
+      }
     };
+
+    ws.onerror = (error) => {
+      console.error('WebSocket error:', error);
+    };
+
     return () => {
-      ws.close();
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.close();
+      }
     };
   }, []);
 

@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadFile } from '../../services/api/dropboxService.ts';
-import { uploadFileNameToBackend } from '../../services/api/tracks.ts';
+import { uploadFileNameToBackend } from '../../services/api/grpc-tracks.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import { IUploadModal } from './Interface';
 import { AsyncResult } from '../../types/types.ts';
@@ -44,9 +44,10 @@ const UploadModal = ({
         type: file.type,
       });
 
-      const url = await uploadFile(renamedFile, renamedFile.name);
-      await uploadFileNameToBackend(trackId, url);
-      await queryClient.invalidateQueries(['tracks']);
+      const dropboxResponse = await uploadFile(renamedFile, renamedFile.name);
+      const audioUrl = dropboxResponse.result.link;
+      await uploadFileNameToBackend(trackId, audioUrl);
+      await queryClient.invalidateQueries({ queryKey: ['tracks'] });
       onUploadSuccess?.();
       onClose();
 
