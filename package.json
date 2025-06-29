@@ -6,14 +6,21 @@
   "scripts": {
     "dev:frontend": "npm run start --workspace=apps/frontend",
     "dev:backend": "npm run dev --workspace=apps/backend/genesis_test-case",
-    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\""
+    "dev:grpc": "npm run dev:grpc --workspace=apps/backend/genesis_test-case",
+    "dev:proxy": "npm run dev:proxy --workspace=apps/backend/genesis_test-case",
+    "dev:ws": "npm run dev:ws --workspace=apps/backend/genesis_test-case",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:all": "concurrently \"npm run dev:grpc --workspace=apps/backend/genesis_test-case\" \"npm run dev:proxy --workspace=apps/backend/genesis_test-case\" \"npm run start --workspace=apps/frontend\"",
+    "start": "npm run dev:all",
+    "start:full": "concurrently \"npm run dev:grpc --workspace=apps/backend/genesis_test-case\" \"npm run dev:proxy --workspace=apps/backend/genesis_test-case\" \"npm run start --workspace=apps/frontend\"",
+    "build": "npm run build --workspace=apps/frontend",
+    "test": "npm run test --workspace=apps/backend/genesis_test-case"
   },
   "devDependencies": {
     "@types/ws": "^8.18.1",
     "concurrently": "^8.2.2"
   },
   "dependencies": {
-    "@fastify/cors": "^11.0.1",
-    "socket.io": "^4.8.1"
+    "@fastify/cors": "^11.0.1"
   }
 }
