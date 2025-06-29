@@ -90,7 +90,7 @@ export const getTracks = async (params: QueryParams = {}): Promise<GetTracksResu
         tracks.push(JSON.parse(content));
       }
     }
-    
+
     // Apply filtering
     if (params.search) {
       const searchLower = params.search.toLowerCase();
@@ -102,7 +102,13 @@ export const getTracks = async (params: QueryParams = {}): Promise<GetTracksResu
     }
     
     if (params.genre) {
-      tracks = tracks.filter(track => track.genres.includes(params.genre as string));
+      console.log('Filtering by genre:', params.genre);
+      tracks = tracks.filter(track => {
+        const hasGenre = track.genres.includes(params.genre as string);
+        console.log(`Track ${track.title} genres:`, track.genres, 'has genre:', hasGenre);
+        return hasGenre;
+      });
+      console.log('After genre filter:', tracks.length);
     }
     
     if (params.artist) {
@@ -114,11 +120,11 @@ export const getTracks = async (params: QueryParams = {}): Promise<GetTracksResu
     if (params.sort) {
       const sortField = params.sort;
       const sortOrder = params.order || 'asc';
-      
+
       tracks.sort((a, b) => {
         const valueA = a[sortField] || '';
         const valueB = b[sortField] || '';
-        
+
         if (typeof valueA === 'string' && typeof valueB === 'string') {
           return sortOrder === 'asc' 
             ? valueA.localeCompare(valueB)
@@ -140,10 +146,12 @@ export const getTracks = async (params: QueryParams = {}): Promise<GetTracksResu
     const start = (page - 1) * limit;
     const end = start + limit;
     
-    return {
+    const result = {
       tracks: tracks.slice(start, end),
       total
     };
+
+    return result;
   } catch (error) {
     console.error('Failed to read tracks:', error);
     return { tracks: [], total: 0 };
