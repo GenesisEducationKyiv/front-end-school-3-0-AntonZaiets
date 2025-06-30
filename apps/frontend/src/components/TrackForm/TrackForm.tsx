@@ -12,10 +12,10 @@ import {
   IconButton,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { ITrackForm } from './Interface';
+import { ITrackForm, defaultGenres } from './Interface';
 import { TTrackFormData } from '../../types/types.ts';
 
-const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
+const TrackForm = ({ open, onClose, track, genres = defaultGenres, onSubmit }: ITrackForm) => {
   const {
     control,
     handleSubmit,
@@ -110,7 +110,7 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
             render={({ field }) => (
               <Autocomplete
                 multiple
-                options={genres || []}
+                options={genres}
                 value={field.value || []}
                 onChange={(_, value) => field.onChange(value)}
                 renderTags={(value, getTagProps) =>

@@ -1,5 +1,4 @@
 export * from './types';
-export * from './endpoints';
 export * from './constants';
 export { MusicServiceClient } from './client';
 export * from './utils';

@@ -7,3 +7,5 @@ export interface ITrackForm {
   genres?: string[];
   onSubmit: (data: TTrackFormData) => void;
 }
+
+export const defaultGenres: string[] = [];

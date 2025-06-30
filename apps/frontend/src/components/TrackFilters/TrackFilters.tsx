@@ -31,6 +31,10 @@ const FiltersSection = ({
   genres,
   tracksData,
 }: FiltersSectionProps) => {
+  const uniqueArtists = tracksData?.tracks && tracksData.tracks.length > 0 
+    ? [...new Set(tracksData.tracks.map((t) => t.artist))]
+    : [];
+
   return (
     <Box display="flex" gap={2} mb={3} flexWrap="wrap">
       <SearchBar
@@ -94,19 +98,15 @@ const FiltersSection = ({
           <MenuItem value="All" data-testid="artist-option-all">
             All
           </MenuItem>
-          {tracksData?.tracks && tracksData.tracks.length > 0 && 
-            [...new Set(tracksData.tracks.map((t) => t.artist))].map(
-            (artist) => (
-              <MenuItem
-                key={artist}
-                value={artist}
-                data-testid={`artist-option-${artist}`}
-              >
-                {artist}
-              </MenuItem>
-            )
-            )
-          }
+          {uniqueArtists.map((artist) => (
+            <MenuItem
+              key={artist}
+              value={artist}
+              data-testid={`artist-option-${artist}`}
+            >
+              {artist}
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
     </Box>

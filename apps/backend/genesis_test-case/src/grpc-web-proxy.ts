@@ -36,7 +36,7 @@ const genreClient = new musicProto.music.GenreService(
   grpc.credentials.createInsecure()
 );
 
-function grpcCall(client: any, method: string, request: any): Promise<any> {
+const grpcCall = (client: any, method: string, request: any): Promise<any> => {
   return new Promise((resolve, reject) => {
     client[method](request, (error: any, response: any) => {
       if (error) {
@@ -46,107 +46,52 @@ function grpcCall(client: any, method: string, request: any): Promise<any> {
       }
     });
   });
-}
+};
 
-app.post('/music.GenreService/GetAllGenres', async (req, res) => {
-  try {
-    console.log('GetAllGenres request body:', req.body);
-    const response = await grpcCall(genreClient, 'getAllGenres', req.body);
-    console.log('GetAllGenres response:', response);
-    console.log('GetAllGenres response.genres:', response.genres);
-    console.log('GetAllGenres response.genres type:', typeof response.genres);
-    console.log('GetAllGenres response.genres length:', response.genres?.length);
-    if (response.genres && response.genres.length > 0) {
-      console.log('First genre:', response.genres[0]);
-      console.log('First genre type:', typeof response.genres[0]);
+
+const generateRoutesFromProto = () => {
+  const routes: Array<{ path: string; client: any; method: string }> = [];
+  const services = musicProto.music;
+  if (services.GenreService && services.GenreService.service) {
+    const genreMethods = Object.keys(services.GenreService.service);
+    genreMethods.forEach(method => {
+      routes.push({
+        path: `/music.GenreService/${method}`,
+        client: genreClient,
+        method: method.charAt(0).toLowerCase() + method.slice(1) // Convert to camelCase
+      });
+    });
+  }
+
+  if (services.TrackService && services.TrackService.service) {
+    const trackMethods = Object.keys(services.TrackService.service);
+    trackMethods.forEach(method => {
+      routes.push({
+        path: `/music.TrackService/${method}`,
+        client: grpcClient,
+        method: method.charAt(0).toLowerCase() + method.slice(1) // Convert to camelCase
+      });
+    });
+  }
+  
+  return routes;
+};
+
+const createRouteHandler = (client: any, method: string) => {
+  return async (req: express.Request, res: express.Response) => {
+    try {
+      const response = await grpcCall(client, method, req.body);
+      res.json(response);
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
-    res.json(response);
-  } catch (error: any) {
-    console.error('GetAllGenres error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
+  };
+};
 
-app.post('/music.TrackService/GetAllTracks', async (req, res) => {
-  try {
-    console.log('GetAllTracks request body:', req.body);
-    const response = await grpcCall(grpcClient, 'getAllTracks', req.body);
-    console.log('GetAllTracks response:', response);
-    res.json(response);
-  } catch (error: any) {
-    console.error('GetAllTracks error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
+const routes = generateRoutesFromProto();
 
-app.post('/music.TrackService/GetTrackBySlug', async (req, res) => {
-  try {
-    const response = await grpcCall(grpcClient, 'getTrackBySlug', req.body);
-    res.json(response);
-  } catch (error: any) {
-    console.error('GetTrackBySlug error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/music.TrackService/CreateTrack', async (req, res) => {
-  try {
-    const response = await grpcCall(grpcClient, 'createTrack', req.body);
-    res.json(response);
-  } catch (error: any) {
-    console.error('CreateTrack error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/music.TrackService/UpdateTrack', async (req, res) => {
-  try {
-    const response = await grpcCall(grpcClient, 'updateTrack', req.body);
-    res.json(response);
-  } catch (error: any) {
-    console.error('UpdateTrack error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/music.TrackService/DeleteTrack', async (req, res) => {
-  try {
-    const response = await grpcCall(grpcClient, 'deleteTrack', req.body);
-    res.json(response);
-  } catch (error: any) {
-    console.error('DeleteTrack error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/music.TrackService/DeleteMultipleTracks', async (req, res) => {
-  try {
-    const response = await grpcCall(grpcClient, 'deleteMultipleTracks', req.body);
-    res.json(response);
-  } catch (error: any) {
-    console.error('DeleteMultipleTracks error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/music.TrackService/UploadTrackFile', async (req, res) => {
-  try {
-    const response = await grpcCall(grpcClient, 'uploadTrackFile', req.body);
-    res.json(response);
-  } catch (error: any) {
-    console.error('UploadTrackFile error:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-app.post('/music.TrackService/DeleteTrackFile', async (req, res) => {
-  try {
-    const response = await grpcCall(grpcClient, 'deleteTrackFile', req.body);
-    res.json(response);
-  } catch (error: any) {
-    console.error('DeleteTrackFile error:', error);
-    res.status(500).json({ error: error.message });
-  }
+routes.forEach(({ path, client, method }) => {
+  app.post(path, createRouteHandler(client, method));
 });
 
 app.get('/health', (req, res) => {
@@ -156,6 +101,7 @@ app.get('/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`gRPC-Web proxy running on port ${PORT}`);
   console.log(`Health check: http://localhost:${PORT}/health`);
+  console.log(`Auto-generated routes:`, routes.map(r => r.path));
 });
 
 export { app }; 

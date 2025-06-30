@@ -55,15 +55,12 @@ const convertTrackToGrpc = (track: any): any => ({
 const genreService: IGenreService = {
   getAllGenres: async (call: any, callback: any) => {
     try {
-      console.log('GetAllGenres called with request:', call.request);
       const genres = await getGenres();
       const response: GetAllGenresResponse = { 
         genres: genres
       };
-      console.log('GetAllGenres response:', response);
       callback(null, response);
     } catch (error) {
-      console.error('GetAllGenres error:', error);
       callback({
         code: grpc.status.INTERNAL,
         message: 'Internal Server Error'
@@ -76,7 +73,6 @@ const trackService: ITrackService = {
   getAllTracks: async (call: any, callback: any) => {
     try {
       const request = call.request || {};
-      console.log('gRPC server received request:', request);
       
       const page = request.page || 1;
       const limit = request.limit || 10;
@@ -85,8 +81,6 @@ const trackService: ITrackService = {
       const sortOrder = request.sort_order || 'asc';
       const genres = request.genres || [];
       
-      console.log('gRPC server extracted params:', { page, limit, search, sort, sortOrder, genres });
-
       const genre = genres.length > 0 ? genres[0] : '';
       
       const query = { page, limit, search, sort, order: sortOrder, genre };
@@ -104,7 +98,6 @@ const trackService: ITrackService = {
       
       callback(null, response);
     } catch (error) {
-      console.error('GetAllTracks error:', error);
       callback({
         code: grpc.status.INTERNAL,
         message: 'Internal Server Error'
@@ -140,7 +133,6 @@ const trackService: ITrackService = {
       };
       callback(null, response);
     } catch (error) {
-      console.error('GetTrackBySlug error:', error);
       callback({
         code: grpc.status.INTERNAL,
         message: 'Internal Server Error'
@@ -196,7 +188,6 @@ const trackService: ITrackService = {
       };
       callback(null, response);
     } catch (error) {
-      console.error('CreateTrack error:', error);
       callback({
         code: grpc.status.INTERNAL,
         message: 'Internal Server Error'

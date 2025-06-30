@@ -5,7 +5,7 @@ import CustomPagination from '../../../../components/CustomPagination/CustomPagi
 import { useEffect, useState } from 'react';
 
 const Tracks = ({ state }) => {
-  const [activeTrackTitle, setActiveTrackTitle] = useState<string>('');
+  const [activeTrackTitle, setActiveTrackTitle] = useState('');
 
   useEffect(() => {
     const ws = new WebSocket('ws://localhost:8081');
