@@ -1,7 +1,7 @@
 export * from './types';
 export * from './constants';
-export { MusicServiceClient } from './client';
-export * from './utils';
+export * from './adapters';
+export * from './client';
 
 import { MusicServiceClient } from './client';
 
