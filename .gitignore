@@ -10,6 +10,11 @@ build/
 
 # Environment variables
 .env
+
+# Playwright
+/test-results/
+/playwright-report/
+/test/playwright/.cache/
 .env.local
 .env.development.local
 .env.test.local

@@ -1,9 +1,66 @@
 {
+  "name": "music-track-app",
+  "version": "1.0.0",
+  "private": true,
   "workspaces": [
     "apps/frontend",
     "apps/backend/genesis_test-case"
   ],
+  "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@hookform/resolvers": "^3.3.1",
+    "@mobily/ts-belt": "^3.13.1",
+    "@mui/icons-material": "^5.17.1",
+    "@mui/material": "^5.17.1",
+    "@tanstack/react-query": "^4.36.1",
+    "axios": "^1.5.0",
+    "dotenv": "^16.5.0",
+    "dropbox": "^10.34.0",
+    "globals": "^16.2.0",
+    "neverthrow": "^8.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-hook-form": "^7.55.0",
+    "react-router-dom": "^6.30.0",
+    "react-toastify": "^9.1.3",
+    "zod": "^3.25.36",
+    "@fastify/cors": "^11.0.1"
+  },
+  "devDependencies": {
+    "@playwright/experimental-ct-react": "^1.53.1",
+    "@playwright/test": "^1.53.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^24.0.3",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
+    "@vitejs/plugin-react": "^4.0.3",
+    "@vitest/coverage-v8": "^3.2.3",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "jsdom": "^26.1.0",
+    "playwright": "^1.53.0",
+    "prettier": "3.5.3",
+    "typescript": "^5.2.2",
+    "typescript-eslint": "^8.33.0",
+    "vite": "^4.4.9",
+    "vitest": "^3.2.3",
+    "concurrently": "^8.2.2",
+    "@types/ws": "^8.18.1"
+  },
+  "overrides": {
+    "brace-expansion": "^2.0.2"
+  },
   "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "preview": "vite preview",
     "dev:frontend": "npm run start --workspace=apps/frontend",
     "dev:backend": "npm run dev --workspace=apps/backend/genesis_test-case",
     "dev:grpc": "npm run dev:grpc --workspace=apps/backend/genesis_test-case",
@@ -11,16 +68,12 @@
     "dev:ws": "npm run dev:ws --workspace=apps/backend/genesis_test-case",
     "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
     "dev:all": "concurrently \"npm run dev:grpc --workspace=apps/backend/genesis_test-case\" \"npm run dev:proxy --workspace=apps/backend/genesis_test-case\" \"npm run start --workspace=apps/frontend\"",
-    "start": "npm run dev:all",
     "start:full": "concurrently \"npm run dev:grpc --workspace=apps/backend/genesis_test-case\" \"npm run dev:proxy --workspace=apps/backend/genesis_test-case\" \"npm run start --workspace=apps/frontend\"",
-    "build": "npm run build --workspace=apps/frontend",
-    "test": "npm run test --workspace=apps/backend/genesis_test-case"
-  },
-  "devDependencies": {
-    "@types/ws": "^8.18.1",
-    "concurrently": "^8.2.2"
-  },
-  "dependencies": {
-    "@fastify/cors": "^11.0.1"
+    "test": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:all": "npm run test && npm run test-ct",
+    "test-ct": "playwright test -c playwright-ct.config.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:dev": "npm run start & timeout 10 && npm run test:e2e"
   }
 }
