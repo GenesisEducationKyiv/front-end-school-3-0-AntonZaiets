@@ -58,7 +58,7 @@ const generateRoutesFromProto = () => {
       routes.push({
         path: `/music.GenreService/${method}`,
         client: genreClient,
-        method: method.charAt(0).toLowerCase() + method.slice(1) // Convert to camelCase
+        method: method.charAt(0).toLowerCase() + method.slice(1)
       });
     });
   }
@@ -69,7 +69,7 @@ const generateRoutesFromProto = () => {
       routes.push({
         path: `/music.TrackService/${method}`,
         client: grpcClient,
-        method: method.charAt(0).toLowerCase() + method.slice(1) // Convert to camelCase
+        method: method.charAt(0).toLowerCase() + method.slice(1)
       });
     });
   }
