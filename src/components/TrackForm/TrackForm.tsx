@@ -56,7 +56,12 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
         </IconButton>
       </DialogTitle>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        key={track?.id || 'new'}
+        onSubmit={handleSubmit((data) => {
+          onSubmit(data);
+        })}
+      >
         <DialogContent sx={{ display: 'grid', gap: 2 }}>
           <Controller
             name="title"
@@ -69,7 +74,7 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
                 fullWidth
                 error={!!errors.title}
                 helperText={errors.title?.message}
-                data-testid="input-title"
+                inputProps={{ 'data-testid': 'input-title' }}
               />
             )}
           />
@@ -84,7 +89,7 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
                 fullWidth
                 error={!!errors.artist}
                 helperText={errors.artist?.message}
-                data-testid="input-artist"
+                inputProps={{ 'data-testid': 'input-artist' }}
               />
             )}
           />
@@ -96,13 +101,14 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
                 {...field}
                 label="Album"
                 fullWidth
-                data-testid="input-album"
+                inputProps={{ 'data-testid': 'input-album' }}
               />
             )}
           />
           <Controller
             name="genres"
             control={control}
+            shouldUnregister={true}
             rules={{
               validate: (value) =>
                 value.length > 0 || 'Select at least one genre',
@@ -110,7 +116,7 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
             render={({ field }) => (
               <Autocomplete
                 multiple
-                options={genres}
+                options={genres || []}
                 value={field.value || []}
                 onChange={(_, value) => field.onChange(value)}
                 renderTags={(value, getTagProps) =>
@@ -154,7 +160,7 @@ const TrackForm = ({ open, onClose, track, genres, onSubmit }: ITrackForm) => {
                 fullWidth
                 error={!!errors.coverImage}
                 helperText={errors.coverImage?.message}
-                data-testid="input-cover-image"
+                inputProps={{ 'data-testid': 'input-cover-image' }}
               />
             )}
           />
