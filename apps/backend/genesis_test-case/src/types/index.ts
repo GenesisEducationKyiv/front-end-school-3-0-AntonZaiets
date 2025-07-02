@@ -1,5 +1,4 @@
 import { FastifyReply, FastifyRequest, RequestGenericInterface } from 'fastify';
-import { MultipartFile } from '@fastify/multipart';
 
 /**
  * Core domain entities
@@ -166,4 +165,4 @@ export interface FileUploadParams extends RequestGenericInterface {
  */
 
 export type RouteHandler<T extends RequestGenericInterface = RequestGenericInterface> = 
-  (request: FastifyRequest<T>, reply: FastifyReply) => Promise<FastifyReply | void>;
+  (request: FastifyRequest<T>, reply: FastifyReply) => Promise<FastifyReply>;

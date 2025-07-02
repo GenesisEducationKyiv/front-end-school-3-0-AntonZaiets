@@ -9,7 +9,8 @@ export interface Track {
   audio_file: string;
 }
 
-export interface GetAllGenresRequest {}
+export type GetAllGenresRequest = Record<string, never>;
+
 export interface GetAllGenresResponse {
   genres: string[];
 }

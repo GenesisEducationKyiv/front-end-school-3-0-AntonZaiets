@@ -208,7 +208,7 @@ const trackService: ITrackService = {
         return;
       }
       
-      let updates: any = { title, artist, album, genres, coverImage: cover_image };
+      const updates: any = { title, artist, album, genres, coverImage: cover_image };
       
       if (title && title !== existingTrack.title) {
         const newSlug = createSlug(title);
