@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/experimental-ct-react';
-import { TrackFormStory } from '../__stories__/TrackFormStory';
+import { TrackFormStory } from '../__stories__/TrackFormStory.tsx';
 
 const mockGenres = ['Rock', 'Pop', 'Jazz'];
 
