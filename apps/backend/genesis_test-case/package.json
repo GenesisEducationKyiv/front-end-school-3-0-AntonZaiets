@@ -9,7 +9,7 @@
     "dev:proxy": "nodemon --watch 'src/**/*.ts' --exec npx ts-node src/grpc-web-proxy.ts",
     "dev:ws": "nodemon --watch 'src/**/*.ts' --exec npx ts-node src/ws-server.ts",
     "build": "tsc",
-    "lint": "eslint src --ext .ts",
+    "lint": "eslint ../.. --ext ts,tsx --report-unused-disable-directives",
     "typecheck": "tsc --noEmit",
     "test": "vitest run src/__tests__/health.test.ts",
     "test:watch": "vitest",
