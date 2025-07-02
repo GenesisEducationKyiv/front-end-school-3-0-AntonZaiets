@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import {
   Dialog,
@@ -15,7 +15,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import { ITrackForm, defaultGenres } from './Interface';
 import { TTrackFormData } from '../../types/types.ts';
 
-const TrackForm = ({ open, onClose, track, genres = defaultGenres, onSubmit }: ITrackForm) => {
+const TrackForm = ({
+  open,
+  onClose,
+  track,
+  genres = defaultGenres,
+  onSubmit,
+}: ITrackForm) => {
   const {
     control,
     handleSubmit,
@@ -44,7 +50,11 @@ const TrackForm = ({ open, onClose, track, genres = defaultGenres, onSubmit }: I
   }, [track, reset]);
 
   return (
-    <Dialog open={Boolean(open)} onClose={onClose} data-testid="track-form-modal">
+    <Dialog
+      open={Boolean(open)}
+      onClose={onClose}
+      data-testid="track-form-modal"
+    >
       <DialogTitle>
         {track ? 'Edit Track' : 'Create New Track'}
         <IconButton
@@ -111,7 +121,7 @@ const TrackForm = ({ open, onClose, track, genres = defaultGenres, onSubmit }: I
             shouldUnregister={true}
             rules={{
               validate: (value) =>
-                (value && value.length > 0) ? true : 'Select at least one genre',
+                value && value.length > 0 ? true : 'Select at least one genre',
             }}
             render={({ field }) => (
               <Autocomplete

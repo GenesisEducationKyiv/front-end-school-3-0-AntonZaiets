@@ -1,8 +1,9 @@
 import TrackForm from '../../../../components/TrackForm/TrackForm.tsx';
 import ConfirmDialog from '../../../../components/ConfirmDialog/ConfirmDialog.tsx';
 import LoadingIndicator from '../../../../components/LoadingIndicator/LoadingIndicator.tsx';
+import useTrackPageState from '../../../../hooks/useTrackPageState';
 
-const TrackModals = ({ state }) => (
+const TrackModals = ({ state }: { state: ReturnType<typeof useTrackPageState> }) => (
   <>
     {state.isModalOpen && (
       <TrackForm
@@ -25,7 +26,7 @@ const TrackModals = ({ state }) => (
           state.setEditingTrackId(null);
         }}
         track={state.tracksData?.tracks.find(
-          (t) => t.id === state.editingTrackId
+          (t: { id: string }) => t.id === state.editingTrackId
         )}
         genres={state.genres || []}
       />
@@ -35,7 +36,9 @@ const TrackModals = ({ state }) => (
       open={!!state.deletingTrackId}
       onClose={() => state.setDeletingTrackId(null)}
       onConfirm={() => {
-        state.deleteMutation.mutate(+state.deletingTrackId!);
+        if (state.deletingTrackId) {
+          state.deleteMutation.mutate(state.deletingTrackId);
+        }
         state.setDeletingTrackId(null);
       }}
       title="Delete Track"
