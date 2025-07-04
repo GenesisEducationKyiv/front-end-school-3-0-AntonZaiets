@@ -53,6 +53,15 @@ jobs:
         run: npm ci
       - name: Build frontend
         run: npm run build --workspace=apps/frontend
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image for frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: apps/frontend/Dockerfile
+          push: false
+          tags: music-track-frontend:ci
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
