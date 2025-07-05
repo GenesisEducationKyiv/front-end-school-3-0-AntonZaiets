@@ -1,4 +1,6 @@
-import { Box, CircularProgress, Typography } from '@mui/material';
+import Box from '@/ui/Box';
+import CircularProgress from '@/ui/CircularProgress';
+import Typography from '@/ui/Typography';
 import { ILoadingIndicator } from './Interface';
 
 const LoadingIndicator = ({

@@ -1,5 +1,5 @@
-import FiltersSection from '../../../../components/TrackFilters/TrackFilters.tsx';
-import BulkActionsSection from '../../../../components/BulkActionsSection/BulkActionsSection.tsx';
+import FiltersSection from '@/components/TrackFilters/TrackFilters.tsx';
+import BulkActionsSection from '@/components/BulkActionsSection/BulkActionsSection.tsx';
 
 const FiltersAndBulk = ({ state }) => (
   <>

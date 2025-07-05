@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import Grid from '@/ui/Grid';
 import TrackItem from '../TrackItem/TrackItem.tsx';
 
 const TracksListSection = ({

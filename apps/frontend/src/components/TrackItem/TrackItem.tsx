@@ -1,15 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from '@mui/material';
+import React, { useState, useEffect, Suspense } from 'react';
+import Card from '@/ui/Card.tsx';
 import TrackInfo from './components/TrackInfo/TrackInfo.tsx';
 import TrackActions from './components/TrackActions/TrackActions.tsx';
-import TrackAudioPlayer from './components/TrackAudioPlayer/TrackAudioPlayer.tsx';
 import TrackCheckbox from './components/TrackCheckbox/TrackCheckbox.tsx';
-import UploadModalHandler from './components/UploadModalHandler/UploadModalHandler.tsx';
-import { getTemporaryLink } from '../../services/api/dropboxService.ts';
+import { getTemporaryLink } from '@/services/api/dropboxService.ts';
 import { ITrackItem } from './Interface';
-import { AsyncResult } from '../../types/types.ts';
+import { AsyncResult } from '@/types/types.ts';
 import { ok } from 'neverthrow';
-import { handleError } from '../../services/api/handleError.ts';
+import { handleError } from '@/services/api/handleError.ts';
+import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
+import UploadModalHandler from './components/UploadModalHandler/UploadModalHandler';
+
+const TrackAudioPlayer = React.lazy(
+  () => import('./components/TrackAudioPlayer/TrackAudioPlayer')
+);
 
 const TrackItem = ({
   track,
@@ -59,7 +63,9 @@ const TrackItem = ({
         trackId={track.id}
       />
       <TrackInfo track={track} />
-      <TrackAudioPlayer audioUrl={audioUrl} trackId={track.id} />
+      <Suspense fallback={<LoadingIndicator size={20} message={''} />}>
+        <TrackAudioPlayer audioUrl={audioUrl} trackId={track.id} />
+      </Suspense>
       <TrackActions
         onEdit={onEdit}
         onDelete={onDelete}

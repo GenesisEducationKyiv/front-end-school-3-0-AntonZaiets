@@ -1,5 +1,4 @@
-import React from 'react';
-import { Checkbox } from '@mui/material';
+import Checkbox from '@/ui/Checkbox';
 
 const TrackCheckbox = ({
   isSelectMode,

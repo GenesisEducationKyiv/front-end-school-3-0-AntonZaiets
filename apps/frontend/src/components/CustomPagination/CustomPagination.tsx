@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Box } from '@mui/material';
+import Button from '@/ui/Button';
+import Box from '@/ui/Box';
 import { IPagination } from './Interface';
 const CustomPagination = ({
   currentPage,

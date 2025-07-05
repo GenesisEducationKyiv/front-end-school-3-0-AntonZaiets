@@ -1,19 +1,17 @@
 import { useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  TextField,
-  Autocomplete,
-  Chip,
-  Button,
-  DialogActions,
-  IconButton,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import Dialog from '@/ui/Dialog';
+import DialogTitle from '@/ui/DialogTitle';
+import DialogContent from '@/ui/DialogContent';
+import TextField from '@/ui/TextField';
+import Autocomplete from '@/ui/Autocomplete';
+import Chip from '@/ui/Chip';
+import Button from '@/ui/Button';
+import DialogActions from '@/ui/DialogActions';
+import IconButton from '@/ui/IconButton';
 import { ITrackForm, defaultGenres } from './Interface';
-import { TTrackFormData } from '../../types/types.ts';
+import { TTrackFormData } from '@/types/types.ts';
+import Close from '@mui/icons-material/Close';
 
 const TrackForm = ({
   open,
@@ -62,7 +60,7 @@ const TrackForm = ({
           sx={{ position: 'absolute', right: 8, top: 8 }}
           data-testid="close-form-button"
         >
-          <CloseIcon />
+          <Close />
         </IconButton>
       </DialogTitle>
 

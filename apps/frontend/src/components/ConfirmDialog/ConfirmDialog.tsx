@@ -1,11 +1,9 @@
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Button,
-} from '@mui/material';
+import DialogContentText from '@/ui/DialogContentText.tsx';
+import Dialog from '@/ui/Dialog.tsx';
+import DialogTitle from '@/ui/DialogTitle.tsx';
+import DialogContent from '@/ui/DialogContent.tsx';
+import Button from '@/ui/Button.tsx';
+import DialogActions from '@/ui/DialogActions.tsx';
 import { IConfirmDialog } from './Interface';
 const ConfirmDialog = ({
   open,

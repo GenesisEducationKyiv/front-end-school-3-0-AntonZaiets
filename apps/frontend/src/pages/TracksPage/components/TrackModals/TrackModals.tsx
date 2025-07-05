@@ -1,9 +1,13 @@
-import TrackForm from '../../../../components/TrackForm/TrackForm.tsx';
-import ConfirmDialog from '../../../../components/ConfirmDialog/ConfirmDialog.tsx';
-import LoadingIndicator from '../../../../components/LoadingIndicator/LoadingIndicator.tsx';
-import useTrackPageState from '../../../../hooks/useTrackPageState';
+import TrackForm from '@/components/TrackForm/TrackForm.tsx';
+import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.tsx';
+import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
+import useTrackPageState from '@/hooks/useTrackPageState';
 
-const TrackModals = ({ state }: { state: ReturnType<typeof useTrackPageState> }) => (
+const TrackModals = ({
+  state,
+}: {
+  state: ReturnType<typeof useTrackPageState>;
+}) => (
   <>
     {state.isModalOpen && (
       <TrackForm
