@@ -1,6 +1,6 @@
 import React from 'react';
 import UploadModal from '../../../UploadModal/UploadModal.tsx';
-import { getTemporaryLink } from '../../../../services/api/dropboxService.ts';
+import { getTemporaryLink } from '@/services/api/dropboxService.ts';
 
 const UploadModalHandler = ({
   showUpload,

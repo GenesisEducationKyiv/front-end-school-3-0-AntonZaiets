@@ -1,5 +1,8 @@
-import { Box, Button, Typography } from '@mui/material';
-import { Add, Delete } from '@mui/icons-material';
+import Box from '@/ui/Box';
+import Button from '@/ui/Button';
+import Typography from '@/ui/Typography';
+import Add from '@mui/icons-material/Add';
+import Delete from '@mui/icons-material/Delete';
 
 const HeaderSection = ({ isSelectMode, onToggleSelectMode, onOpenModal }) => (
   <Box display="flex" justifyContent="space-between" mb={3}>

@@ -1,5 +1,4 @@
-import React from 'react';
-import { Box } from '@mui/material';
+import Box from '@/ui/Box';
 
 const TrackAudioPlayer = ({
   audioUrl,

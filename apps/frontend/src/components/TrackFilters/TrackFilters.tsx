@@ -1,14 +1,12 @@
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import Box from '@/ui/Box';
+import FormControl from '@/ui/FormControl.tsx';
+import InputLabel from '@/ui/InputLabel.tsx';
+import Select from '@/ui/Select.tsx';
+import MenuItem from '@/ui/MenuItem.tsx';
+import { SelectChangeEvent } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
 import { MENU_ITEMS } from './constants/menuItems.ts';
-import { TFetchTracksResponse } from '../../services/api/types';
+import { TFetchTracksResponse } from '@/services/api/types';
 
 interface FiltersSectionProps {
   searchTerm: string;
@@ -31,9 +29,10 @@ const FiltersSection = ({
   genres,
   tracksData,
 }: FiltersSectionProps) => {
-  const uniqueArtists = tracksData?.tracks && tracksData.tracks.length > 0 
-    ? [...new Set(tracksData.tracks.map((t) => t.artist))]
-    : [];
+  const uniqueArtists =
+    tracksData?.tracks && tracksData.tracks.length > 0
+      ? [...new Set(tracksData.tracks.map((t) => t.artist))]
+      : [];
 
   return (
     <Box display="flex" gap={2} mb={3} flexWrap="wrap">

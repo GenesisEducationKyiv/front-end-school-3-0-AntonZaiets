@@ -1,4 +1,4 @@
-import { ITrack } from '../../types/types.ts';
+import { ITrack } from '@/types/types.ts';
 
 export interface TFetchTracksResponse {
   tracks: ITrack[];
