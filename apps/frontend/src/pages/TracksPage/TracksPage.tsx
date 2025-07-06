@@ -4,7 +4,10 @@ import { useTrackPageState } from '@/hooks';
 import HeaderSection from '@/components/HeaderSection/HeaderSection.tsx';
 import FiltersAndBulk from './components/FiltersAndBulk/FiltersAndBulk.tsx';
 import Tracks from './components/Tracks/Tracks.tsx';
-import TrackModals from './components/TrackModals/TrackModals';
+import React, { Suspense } from 'react';
+import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
+
+const TrackModals = React.lazy(() => import('./components/TrackModals/TrackModals'));
 
 const TrackPage = () => {
   const state = useTrackPageState();
@@ -41,7 +44,9 @@ const TrackPage = () => {
         <FiltersAndBulk state={state} />
         <Tracks state={state} />
       </Paper>
+      <Suspense fallback={<LoadingIndicator message="Loading modals..." />}>
       <TrackModals state={state} />
+      </Suspense>
     </Container>
   );
 };

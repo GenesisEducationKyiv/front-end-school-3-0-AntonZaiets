@@ -1,5 +1,6 @@
-import TrackForm from '@/components/TrackForm/TrackForm.tsx';
-import ConfirmDialog from '@/components/ConfirmDialog/ConfirmDialog.tsx';
+import React, { Suspense } from 'react';
+const TrackForm = React.lazy(() => import('@/components/TrackForm/TrackForm.tsx'));
+const ConfirmDialog = React.lazy(() => import('@/components/ConfirmDialog/ConfirmDialog.tsx'));
 import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
 import useTrackPageState from '@/hooks/useTrackPageState';
 
@@ -10,6 +11,7 @@ const TrackModals = ({
 }) => (
   <>
     {state.isModalOpen && (
+      <Suspense fallback={<LoadingIndicator message="Loading form..." />}>
       <TrackForm
         data-testid="track-form-modal"
         open={state.isModalOpen || !!state.editingTrackId}
@@ -34,7 +36,9 @@ const TrackModals = ({
         )}
         genres={state.genres || []}
       />
+      </Suspense>
     )}
+    <Suspense fallback={<LoadingIndicator message="Loading dialog..." />}>
     <ConfirmDialog
       data-testid="confirm-delete-dialog"
       open={!!state.deletingTrackId}
@@ -58,6 +62,7 @@ const TrackModals = ({
       title="Delete Selected Tracks"
       message="Are you sure you want to delete the selected tracks?"
     />
+    </Suspense>
     {state.isLoading && <LoadingIndicator />}
   </>
 );

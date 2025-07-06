@@ -6,10 +6,10 @@ import React, { Suspense } from 'react';
 import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
 const CoverImage = React.lazy(() => import('@/ui/Avatar'));
 
-const TrackInfo = ({ track }: { track: ITrack }) => (
+const TrackInfo = ({ track, loading }: { track: ITrack; loading?: 'eager' | 'lazy' }) => (
   <Box display="flex" alignItems="center" gap={2}>
     <Suspense fallback={<LoadingIndicator size={20} message={''} />}>
-      <CoverImage src={track.coverImage} sx={{ width: 50, height: 50 }} />
+      <CoverImage src={track.coverImage} sx={{ width: 50, height: 50 }} {...(loading ? { imgProps: { loading } } : {})} />
     </Suspense>
     <Box>
       <Typography

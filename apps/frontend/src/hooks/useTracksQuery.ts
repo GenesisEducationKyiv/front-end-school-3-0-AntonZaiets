@@ -1,5 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchTracks, fetchGenres, fetchTrackBySlug } from '../services/api/grpc-tracks';
+import { useMemo } from 'react';
+import {
+  fetchTracks,
+  fetchGenres,
+  fetchTrackBySlug,
+} from '../services/api/grpc-tracks';
 
 export const useGenresQuery = () => {
   return useQuery({
@@ -14,6 +19,8 @@ export const useGenresQuery = () => {
         }
       );
     },
+    staleTime: 10 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
   });
 };
 
@@ -30,8 +37,13 @@ export const useTracksQuery = ({
   filter: Record<string, string>;
   search: string;
 }) => {
+  const queryKey = useMemo(
+    () => ['tracks', { page, limit, sort, filter, search }],
+    [page, limit, sort, JSON.stringify(filter), search]
+  );
+
   return useQuery({
-    queryKey: ['tracks', { page, limit, sort, filter, search }],
+    queryKey,
     queryFn: async () => {
       const result = await fetchTracks(page, limit, sort, filter, search);
       return result.match(
@@ -42,12 +54,16 @@ export const useTracksQuery = ({
         }
       );
     },
+    staleTime: 2 * 60 * 1000,
+    gcTime: 5 * 60 * 1000,
   });
 };
 
 export const useTrackBySlugQuery = (slug: string | null) => {
+  const queryKey = useMemo(() => ['track', slug], [slug]);
+
   return useQuery({
-    queryKey: ['track', slug],
+    queryKey,
     queryFn: async () => {
       if (!slug) return null;
       const result = await fetchTrackBySlug(slug);
@@ -60,5 +76,7 @@ export const useTrackBySlugQuery = (slug: string | null) => {
       );
     },
     enabled: !!slug,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };

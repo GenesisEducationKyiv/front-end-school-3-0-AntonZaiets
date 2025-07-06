@@ -1,13 +1,14 @@
+import React from 'react';
 import Box from '@/ui/Box';
 import CircularProgress from '@/ui/CircularProgress';
 import Typography from '@/ui/Typography';
 import { ILoadingIndicator } from './Interface';
 
-const LoadingIndicator = ({
+const LoadingIndicator = React.memo<ILoadingIndicator>(({
   message = 'Loading...',
   size = 40,
   color = 'primary',
-}: ILoadingIndicator) => {
+}) => {
   return (
     <Box
       display="flex"
@@ -29,6 +30,8 @@ const LoadingIndicator = ({
       )}
     </Box>
   );
-};
+});
+
+LoadingIndicator.displayName = 'LoadingIndicator';
 
 export default LoadingIndicator;
