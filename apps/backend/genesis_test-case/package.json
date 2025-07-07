@@ -10,7 +10,7 @@
     "dev:ws": "nodemon --watch 'src/**/*.ts' --exec npx ts-node src/ws-server.ts",
     "build": "tsc",
     "lint": "eslint ../.. --ext ts,tsx --report-unused-disable-directives",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
     "test": "vitest run src/__tests__/health.test.ts",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",

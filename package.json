@@ -21,7 +21,8 @@
     "start": "npm run dev:all",
     "lint": "npm run lint:frontend && npm run lint:backend",
     "lint:frontend": "npm --workspace apps/frontend run lint",
-    "lint:backend": "npm --workspace apps/backend/genesis_test-case run lint"
+    "lint:backend": "npm --workspace apps/backend/genesis_test-case run lint",
+    "typecheck": "npm run typecheck --workspace=apps/frontend && npm run typecheck --workspace=apps/backend/genesis_test-case"
   },
   "dependencies": {
     "fastify": "^5.4.0",
