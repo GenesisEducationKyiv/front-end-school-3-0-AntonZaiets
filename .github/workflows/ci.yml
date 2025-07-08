@@ -2,22 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [ci-cd]
+    branches: [main, ci-cd]
   pull_request:
-    branches: [ci-cd]
+    branches: [main, ci-cd]
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/setup-node
       - name: Lint frontend and backend
         run: npm run lint --workspace=apps/frontend
 
@@ -25,13 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/setup-node
       - name: Type check all
         run: npm run typecheck
 
@@ -40,13 +28,7 @@ jobs:
     needs: [lint, typecheck, test]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/setup-node
       - name: Build frontend
         run: npm run build --workspace=apps/frontend
       - name: Set up Docker Buildx
@@ -70,12 +52,6 @@ jobs:
     needs: [lint, typecheck]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - name: Install dependencies
-        run: npm ci
+      - uses: ./.github/actions/setup-node
       - name: Run frontend unit tests
         run: npm run test:ci --workspace=apps/frontend -- test/unit/
