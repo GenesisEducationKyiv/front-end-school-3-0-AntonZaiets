@@ -43,8 +43,6 @@ const TrackItem: FC<{
   isLoading = false,
   loading,
 }) => {
-  if (isLoading) return <TrackItemSkeleton />;
-
   const [showUpload, setShowUpload] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
@@ -63,6 +61,8 @@ const TrackItem: FC<{
     };
     fetchAudioUrl();
   }, [track.audioFile, track.id]);
+
+  if (isLoading) return <TrackItemSkeleton />;
 
   return (
     <Card
