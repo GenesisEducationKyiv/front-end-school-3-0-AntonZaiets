@@ -14,7 +14,7 @@ export interface TrackPageState {
 export interface TrackPageActions {
   setPage: (page: number) => void;
   setSort: (sort: string) => void;
-  setFilter: (type: string, value: string) => void;
+  setFilter: (type: FilterType, value: string) => void;
   setSearchTerm: (searchTerm: string) => void;
   setIsModalOpen: (isOpen: boolean) => void;
   setEditingTrackId: (id: string | null) => void;
@@ -28,3 +28,5 @@ export interface TrackPageActions {
   setIsBulkConfirmOpen: (isOpen: boolean) => void;
   resetSelection: () => void;
 }
+
+export type FilterType = 'genre' | 'artist';
