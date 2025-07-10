@@ -26,6 +26,18 @@ const queryClient = new QueryClient({
 test('should handle form submission with valid data', async () => {
   const onSubmit = vi.fn();
 
+  render(
+    <QueryClientProvider client={queryClient}>
+      <TrackForm
+        open={true}
+        onClose={() => {}}
+        onSubmit={onSubmit}
+        genres={mockGenres}
+      />
+    </QueryClientProvider>,
+    { container: document.body }
+  );
+
   const titleInput = screen.getByTestId('input-title');
   const artistInput = screen.getByTestId('input-artist');
   const albumInput = screen.getByTestId('input-album');
