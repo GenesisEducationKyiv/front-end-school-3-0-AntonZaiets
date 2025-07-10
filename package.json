@@ -8,7 +8,8 @@
   ],
   "devDependencies": {
     "@types/ws": "^8.18.1",
-    "concurrently": "^8.2.2"
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7"
   },
   "scripts": {
     "dev:frontend": "npm run start --workspace=apps/frontend",
@@ -22,7 +23,8 @@
     "lint": "npm run lint:frontend && npm run lint:backend",
     "lint:frontend": "npm --workspace apps/frontend run lint",
     "lint:backend": "npm --workspace apps/backend/genesis_test-case run lint",
-    "typecheck": "npm run typecheck --workspace=apps/frontend && npm run typecheck --workspace=apps/backend/genesis_test-case"
+    "typecheck": "npm run typecheck --workspace=apps/frontend && npm run typecheck --workspace=apps/backend/genesis_test-case",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "fastify": "^5.4.0",

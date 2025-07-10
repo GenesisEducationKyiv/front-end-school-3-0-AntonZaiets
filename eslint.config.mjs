@@ -68,6 +68,7 @@ export default [
   {
     ignores: [
       'node_modules/',
+      '**/dist/',
       'apps/frontend/dist/',
       'build/',
       'coverage/',
