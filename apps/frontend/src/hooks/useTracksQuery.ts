@@ -19,8 +19,6 @@ export const useGenresQuery = () => {
         }
       );
     },
-    staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
   });
 };
 
@@ -54,8 +52,6 @@ export const useTracksQuery = ({
         }
       );
     },
-    staleTime: 2 * 60 * 1000,
-    gcTime: 5 * 60 * 1000,
   });
 };
 
@@ -76,7 +72,5 @@ export const useTrackBySlugQuery = (slug: string | null) => {
       );
     },
     enabled: !!slug,
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
   });
 };
