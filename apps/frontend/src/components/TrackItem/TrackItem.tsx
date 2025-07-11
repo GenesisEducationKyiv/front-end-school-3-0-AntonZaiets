@@ -1,5 +1,5 @@
 import React, { FC, Suspense, useState, useEffect } from 'react';
-import Card from '@/ui/Card.tsx';
+import Card from '@/ui/Card/Card.tsx';
 import TrackInfo from './components/TrackInfo/TrackInfo.tsx';
 import TrackActions from './components/TrackActions/TrackActions.tsx';
 import TrackCheckbox from './components/TrackCheckbox/TrackCheckbox.tsx';

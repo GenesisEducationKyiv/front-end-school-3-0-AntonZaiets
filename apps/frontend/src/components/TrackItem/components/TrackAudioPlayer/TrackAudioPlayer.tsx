@@ -1,4 +1,4 @@
-import Box from '@/ui/Box';
+import Box from '@/ui/Box/Box.tsx';
 
 const TrackAudioPlayer = ({
   audioUrl,

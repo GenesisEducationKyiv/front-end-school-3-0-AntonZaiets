@@ -1,6 +1,6 @@
 import TracksListSection from '@/components/TrackList/TrackList.tsx';
 import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
-import Typography from '@/ui/Typography';
+import Typography from '@/ui/Typography/Typography.tsx';
 import CustomPagination from '@/components/CustomPagination/CustomPagination.tsx';
 import { useEffect, useState } from 'react';
 
