@@ -8,17 +8,6 @@ import compression from 'compression';
 const app = express();
 const PORT = process.env.GRPC_WEB_PORT || 8081;
 
-app.use(compression({
-  filter: (req, res) => {
-    if (req.headers['x-no-compression']) {
-      return false;
-    }
-    return compression.filter(req, res);
-  },
-  level: 6,
-  threshold: 1024,
-}));
-
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:4173'],
   credentials: true,
@@ -30,6 +19,7 @@ app.options('*', cors());
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
+app.use(compression() as unknown as express.RequestHandler);
 
 const PROTO_PATH = path.resolve(__dirname, 'music_service.proto');
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
