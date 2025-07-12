@@ -4,14 +4,20 @@ import Typography from '@/ui/Typography/Typography.tsx';
 import Add from '@mui/icons-material/Add';
 import Delete from '@mui/icons-material/Delete';
 
-const HeaderSection = ({ isSelectMode, onToggleSelectMode, onOpenModal }) => (
+interface HeaderSectionProps {
+  isSelectMode: boolean;
+  onToggleSelectMode: () => void;
+  onOpenModal: () => void;
+}
+
+const HeaderSection = ({ isSelectMode, onToggleSelectMode, onOpenModal }: HeaderSectionProps) => (
   <Box display="flex" justifyContent="space-between" mb={3}>
     <Typography variant="h4" data-testid="tracks-header">
       Music Tracks
     </Typography>
     <Box display="flex" gap={2}>
       <Button
-        variant="contained"
+        variant="filled"
         startIcon={<Add />}
         onClick={onOpenModal}
         data-testid="create-track-button"
@@ -19,7 +25,7 @@ const HeaderSection = ({ isSelectMode, onToggleSelectMode, onOpenModal }) => (
         Create Track
       </Button>
       <Button
-        variant="outlined"
+        variant="elevated"
         startIcon={<Delete />}
         onClick={onToggleSelectMode}
         data-testid="select-mode-toggle"

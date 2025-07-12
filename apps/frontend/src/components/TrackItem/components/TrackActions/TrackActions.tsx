@@ -42,6 +42,7 @@ const TrackActions = ({
           <Delete />
         </IconButton>
         <Button
+          variant="tonal"
           startIcon={<CloudUpload />}
           onClick={() => setShowUpload(true)}
           size="small"
