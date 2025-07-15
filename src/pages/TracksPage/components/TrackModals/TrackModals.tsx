@@ -1,58 +1,103 @@
+import useTrackPageStore from '../../../../stores/trackPageStore.ts';
+import {
+  useTracksQuery,
+  useGenresQuery,
+  useCreateTrackMutation,
+  useUpdateTrackMutation,
+  useDeleteTrackMutation,
+  useDeleteMultipleTracksMutation,
+  useDebounce,
+} from '../../../../hooks';
 import TrackForm from '../../../../components/TrackForm/TrackForm.tsx';
 import ConfirmDialog from '../../../../components/ConfirmDialog/ConfirmDialog.tsx';
 import LoadingIndicator from '../../../../components/LoadingIndicator/LoadingIndicator.tsx';
 
-const TrackModals = ({ state }) => (
-  <>
-    {state.isModalOpen && (
-      <TrackForm
-        data-testid="track-form-modal"
-        open={state.isModalOpen || !!state.editingTrackId}
-        onClose={() => {
-          state.setIsModalOpen(false);
-          state.setEditingTrackId(null);
-        }}
-        onSubmit={(formData) => {
-          if (state.editingTrackId) {
-            state.updateTrackMutation.mutate({
-              id: state.editingTrackId,
-              data: formData,
-            });
-          } else {
-            state.createTrackMutation.mutate(formData);
+const TrackModals = () => {
+  const {
+    isModalOpen,
+    closeModal,
+    editingTrackId,
+    deletingTrackId,
+    setDeletingTrackId,
+    isBulkConfirmOpen,
+    setIsBulkConfirmOpen,
+    selectedTracks,
+    resetSelection,
+    page,
+    sort,
+    filter,
+    searchTerm,
+  } = useTrackPageStore();
+  const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
+  const { data: tracksData, isLoading } = useTracksQuery({
+    page,
+    limit: 10,
+    sort,
+    filter,
+    search: debouncedSearchTerm,
+  });
+  const { data: genres = [] } = useGenresQuery();
+  const createTrackMutation = useCreateTrackMutation();
+  const updateTrackMutation = useUpdateTrackMutation();
+  const deleteMutation = useDeleteTrackMutation();
+  const deleteMultipleMutation = useDeleteMultipleTracksMutation({
+    onComplete: resetSelection,
+  });
+
+  const editingTrack =
+    tracksData && 'tracks' in tracksData
+      ? tracksData.tracks.find((t) => t.id === editingTrackId)
+      : undefined;
+
+  const handleSubmit = (formData: any) => {
+    if (editingTrackId) {
+      updateTrackMutation.mutate({
+        id: editingTrackId,
+        data: formData,
+      });
+    } else {
+      createTrackMutation.mutate(formData);
+    }
+    closeModal();
+  };
+
+  return (
+    <>
+      {isModalOpen && (
+        <TrackForm
+          data-testid="track-form-modal"
+          open={isModalOpen}
+          onClose={closeModal}
+          onSubmit={handleSubmit}
+          track={editingTrack}
+          genres={genres}
+        />
+      )}
+      <ConfirmDialog
+        data-testid="confirm-delete-dialog"
+        open={!!deletingTrackId}
+        onClose={() => setDeletingTrackId(null)}
+        onConfirm={() => {
+          if (deletingTrackId) {
+            deleteMutation.mutate(deletingTrackId);
+            setDeletingTrackId(null);
           }
-          state.setIsModalOpen(false);
-          state.setEditingTrackId(null);
         }}
-        track={state.tracksData?.tracks.find(
-          (t) => t.id === state.editingTrackId
-        )}
-        genres={state.genres || []}
+        title="Delete Track"
+        message="Are you sure you want to delete this track?"
       />
-    )}
-    <ConfirmDialog
-      data-testid="confirm-delete-dialog"
-      open={!!state.deletingTrackId}
-      onClose={() => state.setDeletingTrackId(null)}
-      onConfirm={() => {
-        state.deleteMutation.mutate(+state.deletingTrackId!);
-        state.setDeletingTrackId(null);
-      }}
-      title="Delete Track"
-      message="Are you sure you want to delete this track?"
-    />
-    <ConfirmDialog
-      data-testid="confirm-bulk-delete-dialog"
-      open={state.isBulkConfirmOpen}
-      onClose={() => state.setIsBulkConfirmOpen(false)}
-      onConfirm={() =>
-        state.deleteMultipleMutation.mutate(state.selectedTracks)
-      }
-      title="Delete Selected Tracks"
-      message="Are you sure you want to delete the selected tracks?"
-    />
-    {state.isLoading && <LoadingIndicator />}
-  </>
-);
+      <ConfirmDialog
+        data-testid="confirm-bulk-delete-dialog"
+        open={isBulkConfirmOpen}
+        onClose={() => setIsBulkConfirmOpen(false)}
+        onConfirm={() => deleteMultipleMutation.mutate(selectedTracks)}
+        title="Delete Selected Tracks"
+        message="Are you sure you want to delete the selected tracks?"
+      />
+      {isLoading && <LoadingIndicator />}
+    </>
+  );
+};
 
 export default TrackModals;

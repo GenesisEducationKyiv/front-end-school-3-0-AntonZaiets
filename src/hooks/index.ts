@@ -1,4 +1,3 @@
-export { default as useTrackPageState } from './useTrackPageState';
 export { useTracksQuery, useGenresQuery } from './useTracksQuery';
 export {
   useDeleteTrackMutation,

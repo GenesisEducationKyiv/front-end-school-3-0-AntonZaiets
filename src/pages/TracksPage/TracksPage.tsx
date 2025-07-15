@@ -1,12 +1,17 @@
 import { Container, Paper } from '@mui/material';
-import { useTrackPageState } from '../../hooks';
+import useTrackPageStore from '../../stores/trackPageStore';
 import HeaderSection from '../../components/HeaderSection/HeaderSection.tsx';
 import FiltersAndBulk from './components/FiltersAndBulk/FiltersAndBulk.tsx';
 import TrackModals from './components/TrackModals/TrackModals.tsx';
 import Tracks from './components/Tracks/Tracks.tsx';
 
 const TrackPage = () => {
-  const state = useTrackPageState();
+  const { isSelectMode, setIsSelectMode, openNewTrackModal } =
+    useTrackPageStore();
+
+  const handleToggleSelectMode = () => {
+    setIsSelectMode(!isSelectMode);
+  };
 
   return (
     <Container
@@ -33,14 +38,14 @@ const TrackPage = () => {
       >
         <HeaderSection
           data-testid="header-section"
-          isSelectMode={state.isSelectMode}
-          onToggleSelectMode={() => state.setIsSelectMode(!state.isSelectMode)}
-          onOpenModal={() => state.setIsModalOpen(true)}
+          isSelectMode={isSelectMode}
+          onToggleSelectMode={handleToggleSelectMode}
+          onOpenModal={openNewTrackModal}
         />
-        <FiltersAndBulk state={state} />
-        <Tracks state={state} />
+        <FiltersAndBulk />
+        <Tracks />
       </Paper>
-      <TrackModals state={state} />
+      <TrackModals />
     </Container>
   );
 };
