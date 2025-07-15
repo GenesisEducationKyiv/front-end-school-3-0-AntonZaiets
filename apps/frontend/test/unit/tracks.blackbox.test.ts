@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchTracks, createTrack } from '../../src/services/api/tracks';
+import { fetchTracks, createTrack } from '../../../../src/services/api/tracks';
 import axiosInstance from '../../src/services/api/axios/config';
 import {
   TrackSchema,

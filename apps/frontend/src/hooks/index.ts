@@ -1,5 +1,8 @@
-export { default as useTrackPageState } from './useTrackPageState';
-export { useTracksQuery, useGenresQuery, useTrackBySlugQuery } from './useTracksQuery';
+export {
+  useTracksQuery,
+  useGenresQuery,
+  useTrackBySlugQuery,
+} from './useTracksQuery';
 export {
   useDeleteTrackMutation,
   useDeleteMultipleTracksMutation,
