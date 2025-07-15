@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { Card } from '@mui/material';
 import TrackInfo from './components/TrackInfo/TrackInfo.tsx';
 import TrackActions from './components/TrackActions/TrackActions.tsx';
-import TrackAudioPlayer from './components/TrackAudioPlayer/TrackAudioPlayer.tsx';
+import { LazyTrackAudioPlayer } from '../LazyComponents/LazyComponents.tsx';
 import TrackCheckbox from './components/TrackCheckbox/TrackCheckbox.tsx';
 import UploadModalHandler from './components/UploadModalHandler/UploadModalHandler.tsx';
 import { getTemporaryLink } from '../../services/api/dropboxService.ts';
@@ -10,6 +10,7 @@ import { ITrackItem } from './Interface';
 import { AsyncResult } from '../../types/types.ts';
 import { ok } from 'neverthrow';
 import { handleError } from '../../services/api/handleError.ts';
+import LoadingIndicator from '../LoadingIndicator/LoadingIndicator.tsx';
 
 const TrackItem = ({
   track,
@@ -59,7 +60,9 @@ const TrackItem = ({
         trackId={track.id}
       />
       <TrackInfo track={track} />
-      <TrackAudioPlayer audioUrl={audioUrl} trackId={track.id} />
+      <Suspense fallback={<LoadingIndicator size={24} />}>
+        <LazyTrackAudioPlayer audioUrl={audioUrl} trackId={track.id} />
+      </Suspense>
       <TrackActions
         onEdit={onEdit}
         onDelete={onDelete}

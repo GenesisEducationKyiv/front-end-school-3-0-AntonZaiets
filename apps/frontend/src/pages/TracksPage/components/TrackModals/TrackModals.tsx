@@ -8,8 +8,9 @@ import {
   useDeleteMultipleTracksMutation,
   useDebounce,
 } from '../../../../hooks';
+import { Suspense } from 'react';
 import TrackForm from '../../../../components/TrackForm/TrackForm.tsx';
-import ConfirmDialog from '../../../../components/ConfirmDialog/ConfirmDialog.tsx';
+import { LazyConfirmDialog } from '../../../../components/LazyComponents/LazyComponents.tsx';
 import LoadingIndicator from '../../../../components/LoadingIndicator/LoadingIndicator.tsx';
 
 const TrackModals = () => {
@@ -74,27 +75,31 @@ const TrackModals = () => {
           genres={genres}
         />
       )}
-      <ConfirmDialog
-        data-testid="confirm-delete-dialog"
-        open={!!deletingTrackId}
-        onClose={() => setDeletingTrackId(null)}
-        onConfirm={() => {
-          if (deletingTrackId) {
-            deleteMutation.mutate(deletingTrackId);
-            setDeletingTrackId(null);
+      <Suspense fallback={<LoadingIndicator size={24} />}>
+        <LazyConfirmDialog
+          data-testid="confirm-delete-dialog"
+          open={!!deletingTrackId}
+          onClose={() => setDeletingTrackId(null)}
+          onConfirm={() => {
+            if (deletingTrackId) {
+              deleteMutation.mutate(deletingTrackId);
+              setDeletingTrackId(null);
+            }
+          }}
+          title="Delete Track"
+          message="Are you sure you want to delete this track?"
+        />
+        <LazyConfirmDialog
+          data-testid="confirm-bulk-delete-dialog"
+          open={isBulkConfirmOpen}
+          onClose={() => setIsBulkConfirmOpen(false)}
+          onConfirm={() =>
+            deleteMultipleMutation.mutate(selectedTracks)
           }
-        }}
-        title="Delete Track"
-        message="Are you sure you want to delete this track?"
-      />
-      <ConfirmDialog
-        data-testid="confirm-bulk-delete-dialog"
-        open={isBulkConfirmOpen}
-        onClose={() => setIsBulkConfirmOpen(false)}
-        onConfirm={() => deleteMultipleMutation.mutate(selectedTracks)}
-        title="Delete Selected Tracks"
-        message="Are you sure you want to delete the selected tracks?"
-      />
+          title="Delete Selected Tracks"
+          message="Are you sure you want to delete the selected tracks?"
+        />
+      </Suspense>
       {isLoading && <LoadingIndicator />}
     </>
   );
