@@ -1,0 +1,15 @@
+{
+  "title": "1lp",
+  "artist": "32",
+  "album": "123",
+  "genres": [
+    "R&B",
+    "Electronic"
+  ],
+  "coverImage": "https://altamedica.com.ua/uploads/1608108638.jpg",
+  "slug": "1lp",
+  "id": "1745495370261",
+  "createdAt": "2025-04-24T11:49:30.261Z",
+  "updatedAt": "2025-06-11T11:37:24.044Z",
+  "audioFile": "1745495370261.mp3"
+}
