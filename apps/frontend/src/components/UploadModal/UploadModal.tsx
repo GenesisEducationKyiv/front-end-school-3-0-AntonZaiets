@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import Dialog from '@/ui/Dialog';
-import DialogContent from '@/ui/DialogContent';
-import DialogActions from '@/ui/DialogActions';
-import DialogTitle from '@/ui/DialogTitle';
-import Button from '@/ui/Button';
-import CircularProgress from '@/ui/CircularProgress';
-import IconButton from '@/ui/IconButton';
+import Dialog from '@/ui/Dialog/Dialog.tsx';
+import DialogContent from '@/ui/DialogContent/DialogContent.tsx';
+import DialogActions from '@/ui/DialogActions/DialogActions.tsx';
+import DialogTitle from '@/ui/DialogTitle/DialogTitle.tsx';
+import Button from '@/ui/Button/Button.tsx';
+import CircularProgress from '@/ui/CircularProgress/CircularProgress.tsx';
+import IconButton from '@/ui/IconButton/IconButton.tsx';
 import { uploadFile } from '@/services/api/dropboxService.ts';
 import { uploadFileNameToBackend } from '@/services/api/grpc-tracks.ts';
 import { useQueryClient } from '@tanstack/react-query';

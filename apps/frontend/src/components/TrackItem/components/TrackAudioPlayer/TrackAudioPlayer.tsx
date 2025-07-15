@@ -1,4 +1,4 @@
-import Box from '@/ui/Box';
+import Box from '@/ui/Box/Box.tsx';
 
 const TrackAudioPlayer = ({
   audioUrl,
@@ -8,7 +8,7 @@ const TrackAudioPlayer = ({
   trackId: string;
 }) =>
   audioUrl ? (
-    <Box sx={{ flexGrow: 1, width: '50vw', minWidth: 200, marginRight: 10 }}>
+    <Box sx={{ width: '100%' }}>
       <audio
         controls
         src={audioUrl}

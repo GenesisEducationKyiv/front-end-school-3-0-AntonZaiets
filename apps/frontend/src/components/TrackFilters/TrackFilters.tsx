@@ -1,8 +1,8 @@
-import Box from '@/ui/Box';
-import FormControl from '@/ui/FormControl.tsx';
-import InputLabel from '@/ui/InputLabel.tsx';
-import Select from '@/ui/Select.tsx';
-import MenuItem from '@/ui/MenuItem.tsx';
+import Box from '@/ui/Box/Box.tsx';
+import FormControl from '@/ui/FormControl/FormControl.tsx';
+import InputLabel from '@/ui/InputLabel/InputLabel.tsx';
+import Select from '@/ui/Select/Select.tsx';
+import MenuItem from '@/ui/MenuItem/MenuItem.tsx';
 import { SelectChangeEvent } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
 import { MENU_ITEMS } from './constants/menuItems.ts';

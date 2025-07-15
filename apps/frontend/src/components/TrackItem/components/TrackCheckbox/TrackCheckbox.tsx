@@ -1,4 +1,4 @@
-import Checkbox from '@/ui/Checkbox';
+import Checkbox from '@/ui/Checkbox/Checkbox.tsx';
 
 const TrackCheckbox = ({
   isSelectMode,
