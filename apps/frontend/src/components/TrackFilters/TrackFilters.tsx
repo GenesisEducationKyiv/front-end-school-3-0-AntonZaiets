@@ -8,7 +8,7 @@ import {
 } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
 import { MENU_ITEMS } from './constants/menuItems.ts';
-import { TFetchTracksResponse } from '../../services/api/types';
+import { TFetchTracksResponse } from '../../types/types.ts';
 
 interface FiltersSectionProps {
   searchTerm: string;

@@ -30,8 +30,8 @@ message GetAllTracksRequest {
   int32 limit = 2;
   string search = 3;
   repeated string genres = 4;
-  string sort_by = 5;
-  string sort_order = 6;
+  string sortBy = 5;
+  string sortOrder = 6;
   string artist = 7;
 }
 
@@ -56,7 +56,7 @@ message CreateTrackRequest {
   string artist = 2;
   string album = 3;
   repeated string genres = 4;
-  string cover_image = 5;
+  string coverImage = 5;
 }
 
 message CreateTrackResponse {
@@ -69,7 +69,7 @@ message UpdateTrackRequest {
   string artist = 3;
   string album = 4;
   repeated string genres = 5;
-  string cover_image = 6;
+  string coverImage = 6;
 }
 
 message UpdateTrackResponse {
@@ -92,8 +92,8 @@ message DeleteMultipleTracksRequest {
 message DeleteMultipleTracksResponse {
   bool success = 1;
   string message = 2;
-  int32 deleted_count = 3;
-  repeated string not_found_ids = 4;
+  int32 deletedCount = 3;
+  repeated string notFoundIds = 4;
 }
 
 message UploadTrackFileRequest {
@@ -104,7 +104,7 @@ message UploadTrackFileRequest {
 message UploadTrackFileResponse {
   bool success = 1;
   string message = 2;
-  string audio_file = 3;
+  string audioFile = 3;
 }
 
 message DeleteTrackFileRequest {
@@ -122,7 +122,7 @@ message Track {
   string artist = 3;
   string album = 4;
   repeated string genres = 5;
-  string cover_image = 6;
+  string coverImage = 6;
   string slug = 7;
-  string audio_file = 8;
+  string audioFile = 8;
 } 

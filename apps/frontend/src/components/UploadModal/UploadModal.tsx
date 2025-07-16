@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { uploadFile } from '../../services/api/dropboxService.ts';
-import { uploadFileNameToBackend } from '../../services/api/grpc-tracks.ts';
+import { uploadFileNameToBackend } from '../../services/grpc/grpc-tracks.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import { IUploadModal } from './Interface';
 import { AsyncResult } from '../../types/types.ts';

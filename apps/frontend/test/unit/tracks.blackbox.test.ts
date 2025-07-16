@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as grpcTracks from '../../src/services/api/grpc-tracks';
+import * as grpcTracks from '../../src/services/grpc/grpc-tracks';
 import {
   musicServiceClient,
   convertGrpcTracksResponse,

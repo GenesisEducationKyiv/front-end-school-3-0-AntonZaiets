@@ -47,9 +47,9 @@ const convertTrackToGrpc = (track: any): any => ({
   artist: track.artist,
   album: track.album || '',
   genres: track.genres || [],
-  cover_image: track.coverImage || '',
+  coverImage: track.coverImage || '',
   slug: track.slug,
-  audio_file: track.audioFile || ''
+  audioFile: track.audioFile || ''
 });
 
 const genreService: IGenreService = {
@@ -77,8 +77,8 @@ const trackService: ITrackService = {
       const page = request.page || 1;
       const limit = request.limit || 10;
       const search = request.search || '';
-      const sort = request.sort_by || 'title';
-      const sortOrder = request.sort_order || 'asc';
+      const sort = request.sortBy || 'title';
+      const sortOrder = request.sortOrder || 'asc';
       const genres = request.genres || [];
       const artist = request.artist || '';
       
@@ -144,7 +144,7 @@ const trackService: ITrackService = {
   createTrack: async (call: any, callback: any) => {
     try {
       const request = call.request || {};
-      const { title, artist, album = "", genres = [], cover_image = "" } = request;
+      const { title, artist, album = "", genres = [], coverImage = "" } = request;
       
       if (!title || !artist) {
         callback({
@@ -178,7 +178,7 @@ const trackService: ITrackService = {
         artist,
         album,
         genres,
-        coverImage: cover_image,
+        coverImage: coverImage,
         slug
       });
       
@@ -198,7 +198,7 @@ const trackService: ITrackService = {
 
   updateTrack: async (call: any, callback: any) => {
     try {
-      const { id, title, artist, album, genres, cover_image } = call.request;
+      const { id, title, artist, album, genres, coverImage } = call.request;
       
       const existingTrack = await getTrackById(id);
       if (!existingTrack) {
@@ -209,7 +209,7 @@ const trackService: ITrackService = {
         return;
       }
       
-      const updates: any = { title, artist, album, genres, coverImage: cover_image };
+      const updates: any = { title, artist, album, genres, coverImage: coverImage };
       
       if (title && title !== existingTrack.title) {
         const newSlug = createSlug(title);
@@ -290,8 +290,8 @@ const trackService: ITrackService = {
       await updateTracksList();
       
       const response: DeleteMultipleTracksResponse = {
-        deleted_count: results.success.length,
-        not_found_ids: results.failed
+        deletedCount: results.success.length,
+        notFoundIds: results.failed
       };
       
       callback(null, response);

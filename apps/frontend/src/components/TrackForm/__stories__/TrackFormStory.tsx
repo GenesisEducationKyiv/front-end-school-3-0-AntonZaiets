@@ -1,6 +1,6 @@
 import TrackForm from '../TrackForm';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { TTrackFormData } from '../../../types/types';
+import { TrackFormData } from '../../../types/types.ts';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -13,7 +13,7 @@ const queryClient = new QueryClient({
 export interface TrackFormStoryProps {
   open?: boolean;
   onClose?: () => void;
-  onSubmit?: (data: TTrackFormData) => void;
+  onSubmit?: (data: TrackFormData) => void;
   genres?: string[];
   track?: unknown;
 }

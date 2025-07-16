@@ -6,7 +6,7 @@ import CustomPagination from '../../../../components/CustomPagination/CustomPagi
 import { useEffect, useState } from 'react';
 import useDebounce from '../../../../hooks/useDebounce.ts';
 import { useTracksQuery } from '../../../../hooks';
-import { TFetchTracksResponse } from '../../../../services/api/types.ts';
+import { TFetchTracksResponse } from '../../../../types/types.ts';
 
 const Tracks = () => {
   const {

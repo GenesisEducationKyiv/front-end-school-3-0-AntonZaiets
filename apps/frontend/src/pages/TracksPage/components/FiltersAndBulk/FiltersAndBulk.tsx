@@ -3,7 +3,7 @@ import { useTracksQuery, useGenresQuery, useDebounce } from '../../../../hooks';
 import FiltersSection from '../../../../components/TrackFilters/TrackFilters.tsx';
 import BulkActionsSection from '../../../../components/BulkActionsSection/BulkActionsSection.tsx';
 import { SelectChangeEvent } from '@mui/material';
-import { TFetchTracksResponse } from '../../../../services/api/types';
+import { TFetchTracksResponse } from '../../../../types/types.ts';
 
 const FiltersAndBulk = () => {
   const {

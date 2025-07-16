@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import * as grpcTracks from '../../src/services/api/grpc-tracks';
+import * as grpcTracks from '../../src/services/grpc/grpc-tracks';
 import {
   musicServiceClient,
   convertGrpcTracksResponse,
@@ -43,8 +43,8 @@ describe('Tracks Service (gRPC) - White Box', () => {
         page: 2,
         limit: 20,
         search: 'search',
-        sort_by: 'artist',
-        sort_order: 'asc',
+        sortBy: 'artist',
+        sortOrder: 'asc',
         genres: ['Jazz'],
       });
       expect(convertGrpcTracksResponse).toHaveBeenCalledWith({
@@ -90,7 +90,7 @@ describe('Tracks Service (gRPC) - White Box', () => {
         artist: 'A',
         album: '',
         genres: [],
-        cover_image: '',
+        coverImage: '',
       });
       expect(result.isOk()).toBe(true);
       if (result.isOk()) {

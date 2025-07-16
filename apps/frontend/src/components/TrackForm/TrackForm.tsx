@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { ITrackForm, defaultGenres } from './Interface';
-import { TTrackFormData } from '../../types/types.ts';
+import { TrackFormData } from '../../types/types.ts';
 
 const TrackForm = ({
   open,
@@ -27,7 +27,7 @@ const TrackForm = ({
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<TTrackFormData>({
+  } = useForm<TrackFormData>({
     defaultValues: {
       title: '',
       artist: '',

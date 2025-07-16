@@ -1,18 +1,21 @@
 import { Track as GrpcTrack } from '../types/grpcTypes';
-import { ITrack } from '../../../types/types';
+import { BaseTrack } from '../../../types/types.ts';
 
-export const convertGrpcTrackToITrack = (grpcTrack: GrpcTrack): ITrack => ({
+export const convertGrpcTrackToBaseTrack = (
+  grpcTrack: GrpcTrack
+): BaseTrack => ({
   id: grpcTrack.id,
   title: grpcTrack.title,
   artist: grpcTrack.artist,
   album: grpcTrack.album || '',
   genres: grpcTrack.genres || [],
-  coverImage: grpcTrack.cover_image || '',
-  audioFile: grpcTrack.audio_file || '',
+  coverImage: grpcTrack.coverImage || '',
+  audioFile: grpcTrack.audioFile || '',
+  slug: grpcTrack.slug,
 });
 
 export const convertGrpcTracksResponse = (grpcResponse: any) => ({
-  tracks: grpcResponse.tracks.map(convertGrpcTrackToITrack),
+  tracks: grpcResponse.tracks.map(convertGrpcTrackToBaseTrack),
   totalPages: grpcResponse.totalPages,
   currentPage: grpcResponse.page,
-}); 
+});

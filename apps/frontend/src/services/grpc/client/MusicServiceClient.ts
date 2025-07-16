@@ -17,13 +17,13 @@ import {
   UploadTrackFileResponse,
   DeleteTrackFileRequest,
   DeleteTrackFileResponse,
-} from '../types/grpcTypes';
+} from '../types';
 import {
   GRPC_SERVICES,
   GRPC_METHODS,
   DEFAULT_GRPC_HOST,
   GRPC_HEADERS,
-} from '../constants/grpcConstants';
+} from '../constants';
 
 export class MusicServiceClient {
   private host: string;
@@ -135,4 +135,4 @@ export class MusicServiceClient {
       request
     );
   }
-} 
+}

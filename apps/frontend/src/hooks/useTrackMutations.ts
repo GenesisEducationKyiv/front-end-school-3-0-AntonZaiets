@@ -1,6 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteTrack, updateTrack, createTrack, deleteMultipleTracks, deleteTrackFile } from '../services/api/grpc-tracks';
-import { TApiTrackPayload } from '../services/api/types.ts';
+import {
+  deleteTrack,
+  updateTrack,
+  createTrack,
+  deleteMultipleTracks,
+  deleteTrackFile,
+} from '../services/grpc/grpc-tracks.ts';
+import { TrackPayload } from '../services/grpc';
 
 export const useDeleteTrackMutation = () => {
   const queryClient = useQueryClient();
@@ -36,7 +42,7 @@ export const useCreateTrackMutation = () => {
 export const useUpdateTrackMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: ({ id, data }: { id: string; data: TApiTrackPayload }) =>
+    mutationFn: ({ id, data }: { id: string; data: TrackPayload }) =>
       updateTrack(id, data),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tracks'] }),
   });

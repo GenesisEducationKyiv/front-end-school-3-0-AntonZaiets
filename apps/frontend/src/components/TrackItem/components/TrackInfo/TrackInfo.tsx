@@ -1,13 +1,9 @@
-import React from 'react';
 import { Box, Typography, Chip, Avatar } from '@mui/material';
-import { ITrack } from '../../../../types/types.ts';
+import { BaseTrack } from '../../../../types/types.ts';
 
-const TrackInfo = ({ track }: { track: ITrack }) => (
+const TrackInfo = ({ track }: { track: BaseTrack }) => (
   <Box display="flex" alignItems="center" gap={2}>
-    <Avatar
-      src={track.coverImage || '/default-cover.png'}
-      sx={{ width: 50, height: 50 }}
-    />
+    <Avatar src={track.coverImage} sx={{ width: 50, height: 50 }} />
     <Box>
       <Typography
         variant="subtitle1"

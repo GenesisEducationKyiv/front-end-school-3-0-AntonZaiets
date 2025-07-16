@@ -1,5 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchTracks, fetchGenres, fetchTrackBySlug } from '../services/api/grpc-tracks';
+import {
+  fetchTracks,
+  fetchGenres,
+  fetchTrackBySlug,
+} from '../services/grpc/grpc-tracks.ts';
 
 export const useGenresQuery = () => {
   return useQuery({

@@ -1,13 +1,6 @@
-export interface Track {
-  id: string;
-  title: string;
-  artist: string;
-  album: string;
-  genres: string[];
-  cover_image: string;
-  slug: string;
-  audio_file: string;
-}
+import { BaseTrack } from '../../../types/types.ts';
+
+export type Track = Omit<BaseTrack, 'file'> & { slug: string };
 
 export type GetAllGenresRequest = Record<string, never>;
 
@@ -20,8 +13,8 @@ export interface GetAllTracksRequest {
   limit?: number;
   search?: string;
   genres?: string[];
-  sort_by?: string;
-  sort_order?: string;
+  sortBy?: string;
+  sortOrder?: string;
   artist?: string;
 }
 
@@ -41,26 +34,17 @@ export interface GetTrackBySlugResponse {
   track?: Track;
 }
 
-export interface CreateTrackRequest {
-  title: string;
-  artist: string;
-  album?: string;
-  genres: string[];
-  cover_image?: string;
-}
+export type CreateTrackRequest = Pick<
+  BaseTrack,
+  'title' | 'artist' | 'album' | 'genres' | 'coverImage'
+>;
+export type TrackPayload = CreateTrackRequest;
 
 export interface CreateTrackResponse {
   track: Track;
 }
 
-export interface UpdateTrackRequest {
-  id: string;
-  title?: string;
-  artist?: string;
-  album?: string;
-  genres?: string[];
-  cover_image?: string;
-}
+export type UpdateTrackRequest = { id: string } & Partial<CreateTrackRequest>;
 
 export interface UpdateTrackResponse {
   track: Track;
@@ -79,8 +63,8 @@ export interface DeleteMultipleTracksRequest {
 }
 
 export interface DeleteMultipleTracksResponse {
-  deleted_count: number;
-  not_found_ids: string[];
+  deletedCount: number;
+  notFoundIds: string[];
 }
 
 export interface UploadTrackFileRequest {

@@ -1,7 +1,7 @@
-import { ITrack } from '../../../types/types.ts';
+import { BaseTrack } from '../../../types/types.ts';
 
 export interface ITrackItem {
-  track: ITrack;
+  track: BaseTrack;
   onEdit: () => void;
   onDelete: () => void;
   isSelectMode: boolean;

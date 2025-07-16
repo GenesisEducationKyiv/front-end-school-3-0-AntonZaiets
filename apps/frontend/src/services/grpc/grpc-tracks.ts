@@ -1,13 +1,13 @@
 import { ok } from 'neverthrow';
-import { handleError } from './handleError.ts';
-import { AsyncResult, ITrack } from '../../types/types.ts';
-import { TApiTrackPayload, TFetchTracksResponse } from './types.ts';
+import { handleError } from '../api/handleError.ts';
+import { AsyncResult } from '../../types/types.ts';
+import { TrackFormData, TFetchTracksResponse } from '../../types/types.ts';
 import {
   musicServiceClient,
-  convertGrpcTrackToITrack,
+  convertGrpcTrackToBaseTrack,
   convertGrpcTracksResponse,
   convertGrpcGenresToStrings,
-} from '../grpc';
+} from './index.ts';
 
 export const fetchGenres = async (): AsyncResult<string[]> => {
   try {
@@ -31,8 +31,8 @@ export const fetchTracks = async (
       page,
       limit,
       search: search || '',
-      sort_by: sort || 'title',
-      sort_order: 'asc',
+      sortBy: sort || 'title',
+      sortOrder: 'asc',
       genres: filter.genre ? [filter.genre] : [],
       ...(filter.artist ? { artist: filter.artist } : {}),
     });
@@ -47,7 +47,7 @@ export const fetchTracks = async (
 
 export const fetchTrackBySlug = async (
   slug: string
-): AsyncResult<ITrack | null> => {
+): AsyncResult<any | null> => {
   try {
     const response = await musicServiceClient.getTrackBySlug({ slug });
 
@@ -55,7 +55,7 @@ export const fetchTrackBySlug = async (
       return ok(null);
     }
 
-    const convertedTrack = convertGrpcTrackToITrack(response.track);
+    const convertedTrack = convertGrpcTrackToBaseTrack(response.track);
 
     return ok(convertedTrack);
   } catch (e) {
@@ -63,19 +63,17 @@ export const fetchTrackBySlug = async (
   }
 };
 
-export const createTrack = async (
-  data: TApiTrackPayload
-): AsyncResult<ITrack> => {
+export const createTrack = async (data: TrackFormData): AsyncResult<any> => {
   try {
     const response = await musicServiceClient.createTrack({
       title: data.title,
       artist: data.artist,
       album: data.album || '',
       genres: data.genres || [],
-      cover_image: data.coverImage || '',
+      coverImage: data.coverImage || '',
     });
 
-    const convertedTrack = convertGrpcTrackToITrack(response.track);
+    const convertedTrack = convertGrpcTrackToBaseTrack(response.track);
 
     return ok(convertedTrack);
   } catch (e) {
@@ -98,8 +96,8 @@ export const deleteMultipleTracks = async (
   try {
     const response = await musicServiceClient.deleteMultipleTracks({ ids });
     return ok({
-      deletedCount: response.deleted_count,
-      notFoundIds: response.not_found_ids,
+      deletedCount: response.deletedCount,
+      notFoundIds: response.notFoundIds,
     });
   } catch (e) {
     return handleError(e);
@@ -108,8 +106,8 @@ export const deleteMultipleTracks = async (
 
 export const updateTrack = async (
   id: string,
-  data: TApiTrackPayload
-): AsyncResult<ITrack> => {
+  data: TrackFormData
+): AsyncResult<any> => {
   try {
     const response = await musicServiceClient.updateTrack({
       id,
@@ -117,10 +115,10 @@ export const updateTrack = async (
       artist: data.artist,
       album: data.album || '',
       genres: data.genres || [],
-      cover_image: data.coverImage || '',
+      coverImage: data.coverImage || '',
     });
 
-    const convertedTrack = convertGrpcTrackToITrack(response.track);
+    const convertedTrack = convertGrpcTrackToBaseTrack(response.track);
 
     return ok(convertedTrack);
   } catch (e) {
@@ -149,11 +147,11 @@ export const uploadFileNameToBackend = async (
   }
 };
 
-export const deleteTrackFile = async (id: string): AsyncResult<ITrack> => {
+export const deleteTrackFile = async (id: string): AsyncResult<any> => {
   try {
     const response = await musicServiceClient.deleteTrackFile({ id });
 
-    const convertedTrack = convertGrpcTrackToITrack(response.track);
+    const convertedTrack = convertGrpcTrackToBaseTrack(response.track);
 
     return ok(convertedTrack);
   } catch (e) {

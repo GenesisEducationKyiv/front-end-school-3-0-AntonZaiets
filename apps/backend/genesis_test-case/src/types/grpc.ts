@@ -4,9 +4,9 @@ export interface Track {
   artist: string;
   album: string;
   genres: string[];
-  cover_image: string;
+  coverImage: string;
   slug: string;
-  audio_file: string;
+  audioFile: string;
 }
 
 export interface GetAllGenresResponse {
@@ -18,8 +18,8 @@ export interface GetAllTracksRequest {
   limit?: number;
   search?: string;
   genres?: string[];
-  sort_by?: string;
-  sort_order?: string;
+  sortBy?: string;
+  sortOrder?: string;
   artist?: string;
 }
 
@@ -48,8 +48,8 @@ export interface DeleteTrackResponse {
 }
 
 export interface DeleteMultipleTracksResponse {
-  deleted_count: number;
-  not_found_ids: string[];
+  deletedCount: number;
+  notFoundIds: string[];
 }
 
 export interface UploadTrackFileResponse {
