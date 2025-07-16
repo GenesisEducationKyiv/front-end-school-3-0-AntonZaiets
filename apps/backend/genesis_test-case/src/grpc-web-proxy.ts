@@ -5,7 +5,7 @@ import * as protoLoader from '@grpc/proto-loader';
 import * as path from 'path';
 
 const app = express();
-const PORT = process.env.GRPC_WEB_PORT || 8080;
+const PORT = process.env.GRPC_WEB_PORT || 8081;
 
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:3000'],

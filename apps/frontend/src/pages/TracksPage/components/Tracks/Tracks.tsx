@@ -36,7 +36,7 @@ const Tracks = () => {
   const [activeTrackTitle, setActiveTrackTitle] = useState('');
 
   useEffect(() => {
-    const ws = new WebSocket('ws://localhost:8081');
+    const ws = new WebSocket('ws://localhost:8082');
     ws.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);

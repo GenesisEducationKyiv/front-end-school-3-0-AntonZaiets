@@ -1,244 +1,118 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchTracks, createTrack } from '../../../../src/services/api/tracks';
-import axiosInstance from '../../src/services/api/axios/config';
+import * as grpcTracks from '../../src/services/api/grpc-tracks';
 import {
-  TrackSchema,
-  TrackResponseSchema,
-} from '../../src/schemas/trackSchemas';
+  musicServiceClient,
+  convertGrpcTracksResponse,
+  convertGrpcTrackToITrack,
+} from '../../src/services/grpc';
 
-// Mock axios instance
-vi.mock('../../src/services/api/axios/config', () => ({
-  default: {
-    get: vi.fn(),
-    post: vi.fn(),
+vi.mock('../../src/services/grpc', () => ({
+  musicServiceClient: {
+    getAllTracks: vi.fn(),
+    createTrack: vi.fn(),
   },
+  convertGrpcTracksResponse: vi.fn(),
+  convertGrpcTrackToITrack: vi.fn(),
 }));
 
-// Mock TrackSchema
-vi.mock('../../src/schemas/trackSchemas', () => ({
-  TrackSchema: {
-    safeParse: vi.fn(),
-  },
-  TrackResponseSchema: {
-    safeParse: vi.fn(),
-  },
-}));
-
-describe('Tracks Service - White Box Tests', () => {
+describe('Tracks Service (gRPC) - White Box', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
-  describe('fetchTracks - Internal Logic', () => {
-    it('should call axios with correct parameters', async () => {
-      // Arrange
-      const mockResponse = {
-        data: {
-          data: [],
-          meta: { totalPages: 0, page: 1 },
-        },
-      };
-
-      (axiosInstance.get as any).mockResolvedValue(mockResponse);
-      (TrackResponseSchema.safeParse as any).mockReturnValue({
-        success: true,
-        data: mockResponse.data,
+  describe('fetchTracks', () => {
+    it('should call musicServiceClient.getAllTracks with correct params', async () => {
+      (musicServiceClient.getAllTracks as any).mockResolvedValue({
+        grpc: 'response',
+      });
+      (convertGrpcTracksResponse as any).mockReturnValue({
+        tracks: [],
+        totalPages: 1,
+        currentPage: 1,
       });
 
-      // Act
-      await fetchTracks(2, 20, 'artist', { genre: 'Jazz' }, 'search');
-
-      // Assert - тестуємо внутрішні виклики
-      expect(axiosInstance.get).toHaveBeenCalledWith('/tracks', {
-        params: {
-          page: 2,
-          limit: 20,
-          sort: 'artist',
-          genre: 'Jazz',
-          search: 'search',
-        },
-      });
-    });
-
-    it('should call TrackResponseSchema.safeParse with response data', async () => {
-      // Arrange
-      const mockResponse = {
-        data: {
-          data: [],
-          meta: { totalPages: 0, page: 1 },
-        },
-      };
-
-      (axiosInstance.get as any).mockResolvedValue(mockResponse);
-      (TrackResponseSchema.safeParse as any).mockReturnValue({
-        success: true,
-        data: mockResponse.data,
-      });
-
-      // Act
-      await fetchTracks(1, 10);
-
-      // Assert - тестуємо внутрішню логіку валідації
-      expect(TrackResponseSchema.safeParse).toHaveBeenCalledWith(
-        mockResponse.data
+      await grpcTracks.fetchTracks(
+        2,
+        20,
+        'artist',
+        { genre: 'Jazz' },
+        'search'
       );
+
+      expect(musicServiceClient.getAllTracks).toHaveBeenCalledWith({
+        page: 2,
+        limit: 20,
+        search: 'search',
+        sort_by: 'artist',
+        sort_order: 'asc',
+        genres: ['Jazz'],
+      });
+      expect(convertGrpcTracksResponse).toHaveBeenCalledWith({
+        grpc: 'response',
+      });
     });
 
-    it('should handle validation failure internally', async () => {
-      // Arrange
-      const mockResponse = {
-        data: { invalid: 'data' },
-      };
+    it('should handle errors from musicServiceClient', async () => {
+      (musicServiceClient.getAllTracks as any).mockRejectedValue(
+        new Error('gRPC error')
+      );
 
-      (axiosInstance.get as any).mockResolvedValue(mockResponse);
-      (TrackResponseSchema.safeParse as any).mockReturnValue({
-        success: false,
-        error: { message: 'Validation failed' },
-      });
+      const result = await grpcTracks.fetchTracks();
 
-      // Act
-      const result = await fetchTracks(1, 10);
-
-      // Assert - тестуємо внутрішню обробку помилок валідації
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error.message).toContain('Validation failed');
+        expect(result.error.message).toContain('gRPC error');
       }
-      expect(TrackResponseSchema.safeParse).toHaveBeenCalledWith(
-        mockResponse.data
-      );
     });
   });
 
-  describe('createTrack - Internal Logic', () => {
-    it('should call axios.post with correct data', async () => {
-      // Arrange
-      const mockTrackData = {
-        title: 'New Track',
-        artist: 'New Artist',
-        album: 'New Album',
-        genres: ['Pop'],
-        coverImage: 'cover.jpg',
-      };
-
-      const mockResponse = {
-        data: { id: '123', ...mockTrackData },
-      };
-
-      (axiosInstance.post as any).mockResolvedValue(mockResponse);
-      (TrackSchema.safeParse as any).mockReturnValue({
-        success: true,
-        data: mockResponse.data,
+  describe('createTrack', () => {
+    it('should call musicServiceClient.createTrack with correct data', async () => {
+      (musicServiceClient.createTrack as any).mockResolvedValue({
+        track: { id: '1', title: 'Test' },
+      });
+      (convertGrpcTrackToITrack as any).mockReturnValue({
+        id: '1',
+        title: 'Test',
       });
 
-      // Act
-      await createTrack(mockTrackData);
-
-      // Assert - тестуємо внутрішній виклик axios
-      expect(axiosInstance.post).toHaveBeenCalledWith('/tracks', mockTrackData);
-    });
-
-    it('should call TrackSchema.safeParse with response data', async () => {
-      // Arrange
-      const mockTrackData = {
-        title: 'New Track',
-        artist: 'New Artist',
-        album: 'New Album',
-        genres: ['Pop'],
-        coverImage: 'cover.jpg',
+      const data = {
+        title: 'Test',
+        artist: 'A',
+        album: '',
+        genres: [],
+        coverImage: '',
       };
+      const result = await grpcTracks.createTrack(data);
 
-      const mockResponse = {
-        data: { id: '123', ...mockTrackData },
-      };
-
-      (axiosInstance.post as any).mockResolvedValue(mockResponse);
-      (TrackSchema.safeParse as any).mockReturnValue({
-        success: true,
-        data: mockResponse.data,
+      expect(musicServiceClient.createTrack).toHaveBeenCalledWith({
+        title: 'Test',
+        artist: 'A',
+        album: '',
+        genres: [],
+        cover_image: '',
       });
-
-      // Act
-      await createTrack(mockTrackData);
-
-      // Assert - тестуємо внутрішню логіку валідації
-      expect(TrackSchema.safeParse).toHaveBeenCalledWith(mockResponse.data);
-    });
-
-    it('should handle validation errors internally', async () => {
-      // Arrange
-      const mockTrackData = {
-        title: 'New Track',
-        artist: 'New Artist',
-        album: 'New Album',
-        genres: ['Pop'],
-        coverImage: 'cover.jpg',
-      };
-
-      const mockResponse = {
-        data: { id: '123', ...mockTrackData },
-      };
-
-      (axiosInstance.post as any).mockResolvedValue(mockResponse);
-      (TrackSchema.safeParse as any).mockReturnValue({
-        success: false,
-        error: { message: 'Validation error' },
-      });
-
-      // Act
-      const result = await createTrack(mockTrackData);
-
-      // Assert - тестуємо внутрішню обробку помилок валідації
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        expect(result.error.message).toContain('Validation error');
-      }
-      expect(TrackSchema.safeParse).toHaveBeenCalledWith(mockResponse.data);
-    });
-
-    it('should handle axios error internally', async () => {
-      // Arrange
-      const mockTrackData = {
-        title: 'New Track',
-        artist: 'New Artist',
-        album: 'New Album',
-        genres: ['Pop'],
-        coverImage: 'cover.jpg',
-      };
-
-      const axiosError = new Error('Bad request');
-      (axiosInstance.post as any).mockRejectedValue(axiosError);
-
-      // Act
-      const result = await createTrack(mockTrackData);
-
-      // Assert - тестуємо внутрішню обробку помилок axios
-      expect(result.isErr()).toBe(true);
-      if (result.isErr()) {
-        expect(result.error.message).toBe('Bad request');
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value).toEqual({ id: '1', title: 'Test' });
       }
     });
 
-    it('should handle network error internally', async () => {
-      // Arrange
-      const mockTrackData = {
-        title: 'New Track',
-        artist: 'New Artist',
-        album: 'New Album',
-        genres: ['Pop'],
-        coverImage: 'cover.jpg',
+    it('should handle errors from musicServiceClient', async () => {
+      (musicServiceClient.createTrack as any).mockRejectedValue(
+        new Error('gRPC create error')
+      );
+      const data = {
+        title: 'Test',
+        artist: 'A',
+        album: '',
+        genres: [],
+        coverImage: '',
       };
-
-      const networkError = new Error('Network error');
-      (axiosInstance.post as any).mockRejectedValue(networkError);
-
-      // Act
-      const result = await createTrack(mockTrackData);
-
-      // Assert - тестуємо внутрішню обробку мережевих помилок
+      const result = await grpcTracks.createTrack(data);
       expect(result.isErr()).toBe(true);
       if (result.isErr()) {
-        expect(result.error.message).toContain('Network error');
+        expect(result.error.message).toContain('gRPC create error');
       }
     });
   });

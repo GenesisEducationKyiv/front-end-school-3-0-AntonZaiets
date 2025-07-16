@@ -209,7 +209,7 @@ const trackService: ITrackService = {
         return;
       }
       
-      let updates: any = { title, artist, album, genres, coverImage: cover_image };
+      const updates: any = { title, artist, album, genres, coverImage: cover_image };
       
       if (title && title !== existingTrack.title) {
         const newSlug = createSlug(title);
@@ -426,7 +426,7 @@ server.bindAsync(`0.0.0.0:${PORT}`, grpc.ServerCredentials.createInsecure(), (er
 
   console.log(`gRPC server running on port ${port}`);
 
-  startWSServer(8081);
+  startWSServer(8082);
 });
 
 export { server }; 

@@ -19,7 +19,7 @@ export const GRPC_METHODS = {
   },
 } as const;
 
-export const DEFAULT_GRPC_HOST = 'http://localhost:8080';
+export const DEFAULT_GRPC_HOST = 'http://localhost:8081';
 
 export const GRPC_HEADERS = {
   'Content-Type': 'application/json',

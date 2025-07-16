@@ -1,60 +1,37 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchTracks, createTrack } from '../../../../src/services/api/tracks';
-import axiosInstance from '../../src/services/api/axios/config';
+import * as grpcTracks from '../../src/services/api/grpc-tracks';
 import {
-  TrackSchema,
-  TrackResponseSchema,
-} from '../../src/schemas/trackSchemas';
+  musicServiceClient,
+  convertGrpcTracksResponse,
+  convertGrpcTrackToITrack,
+} from '../../src/services/grpc';
 
-vi.mock('../../src/services/api/axios/config', () => ({
-  default: {
-    get: vi.fn(),
-    post: vi.fn(),
+vi.mock('../../src/services/grpc', () => ({
+  musicServiceClient: {
+    getAllTracks: vi.fn(),
+    createTrack: vi.fn(),
   },
+  convertGrpcTracksResponse: vi.fn(),
+  convertGrpcTrackToITrack: vi.fn(),
 }));
 
-vi.mock('../../src/schemas/trackSchemas', () => ({
-  TrackSchema: {
-    safeParse: vi.fn(),
-  },
-  TrackResponseSchema: {
-    safeParse: vi.fn(),
-  },
-}));
-
-describe('Tracks Service - Black Box Tests', () => {
+describe('Tracks Service (gRPC) - Black Box', () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   describe('fetchTracks', () => {
-    it('should fetch tracks with pagination and filters', async () => {
-      const mockResponse = {
-        data: {
-          data: [
-            {
-              id: '1',
-              title: 'Test Track',
-              artist: 'Test Artist',
-              album: 'Test Album',
-              genres: ['Rock'],
-              coverImage: 'test.jpg',
-            },
-          ],
-          meta: {
-            totalPages: 5,
-            page: 1,
-          },
-        },
-      };
-
-      (axiosInstance.get as any).mockResolvedValue(mockResponse);
-      (TrackResponseSchema.safeParse as any).mockReturnValue({
-        success: true,
-        data: mockResponse.data,
+    it('should return tracks and meta info on success', async () => {
+      (musicServiceClient.getAllTracks as any).mockResolvedValue({
+        grpc: 'response',
+      });
+      (convertGrpcTracksResponse as any).mockReturnValue({
+        tracks: [{ id: '1', title: 'Test Track' }],
+        totalPages: 5,
+        currentPage: 1,
       });
 
-      const result = await fetchTracks(
+      const result = await grpcTracks.fetchTracks(
         1,
         10,
         'title',
@@ -63,78 +40,56 @@ describe('Tracks Service - Black Box Tests', () => {
       );
 
       expect(result.isOk()).toBe(true);
-      expect((result as any).value).toEqual({
-        tracks: mockResponse.data.data,
-        totalPages: 5,
-        currentPage: 1,
-      });
+      if (result.isOk()) {
+        expect(result.value).toEqual({
+          tracks: [{ id: '1', title: 'Test Track' }],
+          totalPages: 5,
+          currentPage: 1,
+        });
+      }
     });
 
     it('should handle empty response', async () => {
-      const mockResponse = {
-        data: {
-          data: [],
-          meta: {
-            totalPages: 0,
-            page: 1,
-          },
-        },
-      };
-
-      (axiosInstance.get as any).mockResolvedValue(mockResponse);
-      (TrackResponseSchema.safeParse as any).mockReturnValue({
-        success: true,
-        data: mockResponse.data,
+      (musicServiceClient.getAllTracks as any).mockResolvedValue({
+        grpc: 'response',
+      });
+      (convertGrpcTracksResponse as any).mockReturnValue({
+        tracks: [],
+        totalPages: 0,
+        currentPage: 1,
       });
 
-      const result = await fetchTracks(1, 10);
+      const result = await grpcTracks.fetchTracks(1, 10);
 
       expect(result.isOk()).toBe(true);
-      expect((result as any).value.tracks).toEqual([]);
-      expect((result as any).value.totalPages).toBe(0);
+      if (result.isOk()) {
+        expect(result.value.tracks).toEqual([]);
+        expect(result.value.totalPages).toBe(0);
+      }
     });
 
-    it('should handle API errors', async () => {
-      const errorMessage = 'Network error';
-      (axiosInstance.get as any).mockRejectedValue(new Error(errorMessage));
-
-      const result = await fetchTracks(1, 10);
-
+    it('should handle errors from musicServiceClient', async () => {
+      (musicServiceClient.getAllTracks as any).mockRejectedValue(
+        new Error('gRPC error')
+      );
+      const result = await grpcTracks.fetchTracks(1, 10);
       expect(result.isErr()).toBe(true);
-      expect((result as any).error.message).toContain(errorMessage);
+      if (result.isErr()) {
+        expect(result.error.message).toContain('gRPC error');
+      }
     });
   });
 
   describe('createTrack', () => {
-    it('should create a track successfully', async () => {
-      const mockTrackData = {
+    it('should return created track on success', async () => {
+      (musicServiceClient.createTrack as any).mockResolvedValue({
+        track: { id: '123', title: 'New Track' },
+      });
+      (convertGrpcTrackToITrack as any).mockReturnValue({
+        id: '123',
         title: 'New Track',
-        artist: 'New Artist',
-        album: 'New Album',
-        genres: ['Pop'],
-        coverImage: 'cover.jpg',
-      };
-
-      const mockResponse = {
-        data: {
-          id: '123',
-          ...mockTrackData,
-        },
-      };
-
-      (axiosInstance.post as any).mockResolvedValue(mockResponse);
-      (TrackSchema.safeParse as any).mockReturnValue({
-        success: true,
-        data: mockResponse.data,
       });
 
-      const result = await createTrack(mockTrackData);
-
-      expect(result.isOk()).toBe(true);
-      expect((result as any).value).toEqual(mockResponse.data);
-    });
-
-    it('should handle API errors during creation', async () => {
       const mockTrackData = {
         title: 'New Track',
         artist: 'New Artist',
@@ -143,13 +98,30 @@ describe('Tracks Service - Black Box Tests', () => {
         coverImage: 'cover.jpg',
       };
 
-      const errorMessage = 'Creation failed';
-      (axiosInstance.post as any).mockRejectedValue(new Error(errorMessage));
+      const result = await grpcTracks.createTrack(mockTrackData);
 
-      const result = await createTrack(mockTrackData);
+      expect(result.isOk()).toBe(true);
+      if (result.isOk()) {
+        expect(result.value).toEqual({ id: '123', title: 'New Track' });
+      }
+    });
 
+    it('should handle errors from musicServiceClient', async () => {
+      (musicServiceClient.createTrack as any).mockRejectedValue(
+        new Error('gRPC create error')
+      );
+      const mockTrackData = {
+        title: 'New Track',
+        artist: 'New Artist',
+        album: 'New Album',
+        genres: ['Pop'],
+        coverImage: 'cover.jpg',
+      };
+      const result = await grpcTracks.createTrack(mockTrackData);
       expect(result.isErr()).toBe(true);
-      expect((result as any).error.message).toContain(errorMessage);
+      if (result.isErr()) {
+        expect(result.error.message).toContain('gRPC create error');
+      }
     });
   });
 });
