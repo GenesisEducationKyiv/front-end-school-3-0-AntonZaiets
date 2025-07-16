@@ -21,6 +21,7 @@ export interface GetAllTracksRequest {
   genres?: string[];
   sort_by?: string;
   sort_order?: string;
+  artist?: string;
 }
 
 export interface GetAllTracksResponse {
@@ -97,4 +98,4 @@ export interface DeleteTrackFileRequest {
 
 export interface DeleteTrackFileResponse {
   track: Track;
-} 
+}

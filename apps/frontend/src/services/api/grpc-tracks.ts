@@ -34,6 +34,7 @@ export const fetchTracks = async (
       sort_by: sort || 'title',
       sort_order: 'asc',
       genres: filter.genre ? [filter.genre] : [],
+      artist: filter.artist || '',
     });
 
     const convertedResponse = convertGrpcTracksResponse(response);

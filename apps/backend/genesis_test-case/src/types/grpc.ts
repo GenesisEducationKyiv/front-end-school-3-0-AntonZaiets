@@ -13,6 +13,16 @@ export interface GetAllGenresResponse {
   genres: string[];
 }
 
+export interface GetAllTracksRequest {
+  page?: number;
+  limit?: number;
+  search?: string;
+  genres?: string[];
+  sort_by?: string;
+  sort_order?: string;
+  artist?: string;
+}
+
 export interface GetAllTracksResponse {
   tracks: Track[];
   total: number;

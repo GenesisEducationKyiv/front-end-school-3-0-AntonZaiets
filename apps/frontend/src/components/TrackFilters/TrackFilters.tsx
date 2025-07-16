@@ -31,9 +31,10 @@ const FiltersSection = ({
   genres,
   tracksData,
 }: FiltersSectionProps) => {
-  const uniqueArtists = tracksData?.tracks && tracksData.tracks.length > 0 
-    ? [...new Set(tracksData.tracks.map((t) => t.artist))]
-    : [];
+  const uniqueArtists =
+    tracksData?.tracks && tracksData.tracks.length > 0
+      ? [...new Set(tracksData.tracks.map((t) => t.artist))]
+      : [];
 
   return (
     <Box display="flex" gap={2} mb={3} flexWrap="wrap">
@@ -98,7 +99,7 @@ const FiltersSection = ({
           <MenuItem value="All" data-testid="artist-option-all">
             All
           </MenuItem>
-          {uniqueArtists.map((artist) => (
+          {uniqueArtists.map((artist: string) => (
             <MenuItem
               key={artist}
               value={artist}

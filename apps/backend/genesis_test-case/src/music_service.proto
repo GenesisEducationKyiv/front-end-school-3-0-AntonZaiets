@@ -32,6 +32,7 @@ message GetAllTracksRequest {
   repeated string genres = 4;
   string sort_by = 5;
   string sort_order = 6;
+  string artist = 7;
 }
 
 message GetAllTracksResponse {

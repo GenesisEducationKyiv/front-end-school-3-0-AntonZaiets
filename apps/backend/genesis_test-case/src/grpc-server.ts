@@ -80,10 +80,11 @@ const trackService: ITrackService = {
       const sort = request.sort_by || 'title';
       const sortOrder = request.sort_order || 'asc';
       const genres = request.genres || [];
+      const artist = request.artist || '';
       
       const genre = genres.length > 0 ? genres[0] : '';
       
-      const query = { page, limit, search, sort, order: sortOrder, genre };
+      const query = { page, limit, search, sort, order: sortOrder, genre, artist };
       
       const { tracks, total } = await getTracks(query);
       const totalPages = Math.ceil(total / limit);
