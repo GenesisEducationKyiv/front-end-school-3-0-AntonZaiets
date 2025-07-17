@@ -3,7 +3,7 @@ import * as grpcTracks from '../../src/services/grpc/grpc-tracks';
 import {
   musicServiceClient,
   convertGrpcTracksResponse,
-  convertGrpcTrackToITrack,
+  convertGrpcTrackToBaseTrack,
 } from '../../src/services/grpc';
 
 vi.mock('../../src/services/grpc', () => ({
@@ -13,6 +13,7 @@ vi.mock('../../src/services/grpc', () => ({
   },
   convertGrpcTracksResponse: vi.fn(),
   convertGrpcTrackToITrack: vi.fn(),
+  convertGrpcTrackToBaseTrack: vi.fn(),
 }));
 
 describe('Tracks Service (gRPC) - Black Box', () => {
@@ -85,7 +86,7 @@ describe('Tracks Service (gRPC) - Black Box', () => {
       (musicServiceClient.createTrack as any).mockResolvedValue({
         track: { id: '123', title: 'New Track' },
       });
-      (convertGrpcTrackToITrack as any).mockReturnValue({
+      (convertGrpcTrackToBaseTrack as any).mockReturnValue({
         id: '123',
         title: 'New Track',
       });

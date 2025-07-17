@@ -48,7 +48,25 @@ test.describe('Tracks Page E2E', () => {
     await page.goto('/tracks');
     await page.waitForTimeout(2000);
 
-    const tracksList = page.locator('[data-testid="tracks-list-section"]');
+    await Promise.race([
+      page
+        .waitForSelector('[data-testid="tracks-list"]', { timeout: 3000 })
+        .catch(() => {}),
+      page
+        .waitForSelector('[data-testid="no-tracks"]', { timeout: 3000 })
+        .catch(() => {}),
+      page
+        .waitForSelector('[data-testid="error-message"]', { timeout: 3000 })
+        .catch(() => {}),
+      page
+        .waitForSelector('[data-testid="loading-indicator"]', { timeout: 3000 })
+        .catch(() => {}),
+    ]);
+
+    const bodyText = await page.locator('body').innerText();
+    console.log('BODY TEXT:', bodyText);
+
+    const tracksList = page.locator('[data-testid="tracks-list"]');
     const noTracksMessage = page.locator('[data-testid="no-tracks"]');
     const errorMessage = page.locator('[data-testid="error-message"]');
     const hasTracks = await tracksList.isVisible();
@@ -59,14 +77,22 @@ test.describe('Tracks Page E2E', () => {
   });
 
   test('should handle page errors gracefully', async ({ page }) => {
-    await page.route('**/api/**', (route) => route.abort('failed'));
+    await page.route('**/music.TrackService/**', (route) =>
+      route.abort('failed')
+    );
     await page.goto('/tracks');
     await page.waitForLoadState('domcontentloaded');
-    await expect(page.locator('html')).toBeVisible();
-    await expect(page.locator('body')).toBeVisible();
+    await Promise.race([
+      page
+        .waitForSelector('[data-testid="error-message"]', { timeout: 3000 })
+        .catch(() => {}),
+      page
+        .waitForSelector('[data-testid="loading-indicator"]', { timeout: 3000 })
+        .catch(() => {}),
+    ]);
 
     const errorMessage = page.locator('[data-testid="error-message"]');
-    const loadingSpinner = page.locator('[data-testid="loading-spinner"]');
+    const loadingSpinner = page.locator('[data-testid="loading-indicator"]');
     const hasError = await errorMessage.isVisible();
     const isLoading = await loadingSpinner.isVisible();
 
