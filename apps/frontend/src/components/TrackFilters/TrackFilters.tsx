@@ -8,18 +8,7 @@ import {
 } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
 import { MENU_ITEMS } from './constants/menuItems.ts';
-import { TFetchTracksResponse } from '../../types/types.ts';
-
-interface FiltersSectionProps {
-  searchTerm: string;
-  onSearchChange: (value: string) => void;
-  sort: string;
-  onSortChange: (value: string) => void;
-  filter: Record<string, string>;
-  onFilterChange: (key: string, value: string) => void;
-  genres: string[];
-  tracksData?: TFetchTracksResponse;
-}
+import { FiltersSectionProps } from './Interface';
 
 const FiltersSection = ({
   searchTerm,

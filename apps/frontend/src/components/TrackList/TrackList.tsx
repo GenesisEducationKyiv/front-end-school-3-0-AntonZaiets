@@ -1,5 +1,6 @@
-import { Grid } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import TrackItem from '../TrackItem/TrackItem.tsx';
+import { TracksListSectionProps } from './Interface';
 
 const TracksListSection = ({
   tracksData,
@@ -8,10 +9,14 @@ const TracksListSection = ({
   onSelectTrack,
   onEditTrack,
   onDeleteTrack,
-}) => (
+}: TracksListSectionProps) => (
   <Grid container spacing={3} data-testid="tracks-list" direction="column">
     {tracksData?.tracks.map((track) => (
-      <Grid item xs={12} key={track.id} data-testid={`track-item-${track.id}`}>
+      <Grid
+        key={track.id}
+        data-testid={`track-item-${track.id}`}
+        component="div"
+      >
         <TrackItem
           track={track}
           onEdit={() => onEditTrack(track.id)}

@@ -1,5 +1,6 @@
 import { Box, Button, FormControlLabel, Checkbox } from '@mui/material';
 import { Delete } from '@mui/icons-material';
+import { BulkActionsSectionProps } from './Interface';
 
 const BulkActionsSection = ({
   isSelectMode,
@@ -7,7 +8,7 @@ const BulkActionsSection = ({
   onToggleSelectAll,
   onBulkDelete,
   tracksData,
-}) =>
+}: BulkActionsSectionProps) =>
   isSelectMode && (
     <Box
       data-testid="bulk-actions-section"

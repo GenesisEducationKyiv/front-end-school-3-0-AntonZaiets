@@ -3,6 +3,7 @@ import userEvent from '@testing-library/user-event';
 import TrackForm from '../TrackForm';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { test, expect, vi } from 'vitest';
+import '@testing-library/jest-dom';
 
 const mockGenres = ['Rock', 'Pop', 'Jazz'];
 

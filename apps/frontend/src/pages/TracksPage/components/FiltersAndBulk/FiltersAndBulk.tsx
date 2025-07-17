@@ -45,10 +45,10 @@ const FiltersAndBulk = () => {
         searchTerm={searchTerm}
         onSearchChange={setSearchTerm}
         sort={sort}
-        onSortChange={(e: SelectChangeEvent<string>) => setSort(e.target.value)}
+        onSortChange={(e: SelectChangeEvent) => setSort(e.target.value)}
         filter={filter}
         onFilterChange={setFilter}
-        genres={genres}
+        genres={genres ?? []}
         tracksData={tracksData}
       />
       <BulkActionsSection

@@ -1,7 +1,12 @@
 import { Box, Button, Typography } from '@mui/material';
 import { Add, Delete } from '@mui/icons-material';
+import { HeaderSectionProps } from './Interface';
 
-const HeaderSection = ({ isSelectMode, onToggleSelectMode, onOpenModal }) => (
+const HeaderSection = ({
+  isSelectMode,
+  onToggleSelectMode,
+  onOpenModal,
+}: HeaderSectionProps) => (
   <Box display="flex" justifyContent="space-between" mb={3}>
     <Typography variant="h4" data-testid="tracks-header">
       Music Tracks

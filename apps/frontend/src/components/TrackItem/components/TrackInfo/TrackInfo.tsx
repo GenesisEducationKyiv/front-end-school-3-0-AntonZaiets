@@ -25,7 +25,7 @@ const TrackInfo = ({ track }: { track: BaseTrack }) => (
         </Typography>
       )}
       <Box mt={0.5} display="flex" flexWrap="wrap" gap={0.5}>
-        {track.genres?.map((genre) => (
+        {track.genres?.map((genre: string) => (
           <Chip
             key={genre}
             label={genre}
