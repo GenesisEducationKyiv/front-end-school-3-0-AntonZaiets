@@ -131,16 +131,10 @@ export const uploadFileNameToBackend = async (
   audioUrl: string
 ): AsyncResult<void> => {
   try {
-    const response = await fetch(audioUrl);
-    const arrayBuffer = await response.arrayBuffer();
-    const uint8Array = new Uint8Array(arrayBuffer);
-
     await musicServiceClient.uploadTrackFile({
       id,
-      filename: 'audio.mp3',
-      data: uint8Array,
+      audioFile: audioUrl,
     });
-
     return ok(undefined);
   } catch (e) {
     return handleError(e);

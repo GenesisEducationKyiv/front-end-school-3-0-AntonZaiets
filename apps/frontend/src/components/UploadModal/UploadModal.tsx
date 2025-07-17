@@ -44,9 +44,8 @@ const UploadModal = ({
         type: file.type,
       });
 
-      const dropboxResponse = await uploadFile(renamedFile, renamedFile.name);
-      const audioUrl = dropboxResponse.result.link;
-      await uploadFileNameToBackend(trackId, audioUrl);
+      await uploadFile(renamedFile, renamedFile.name);
+      await uploadFileNameToBackend(trackId, `${trackId}.${ext}`);
       await queryClient.invalidateQueries({ queryKey: ['tracks'] });
       onUploadSuccess?.();
       onClose();

@@ -97,14 +97,12 @@ message DeleteMultipleTracksResponse {
 }
 
 message UploadTrackFileRequest {
-  string track_id = 1;
-  string file_url = 2;
+  string id = 1;
+  string audioFile = 2;
 }
 
 message UploadTrackFileResponse {
-  bool success = 1;
-  string message = 2;
-  string audioFile = 3;
+  Track track = 1;
 }
 
 message DeleteTrackFileRequest {

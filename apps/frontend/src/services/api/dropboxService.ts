@@ -5,12 +5,11 @@ const dbx = new Dropbox({ accessToken: config.api.dropboxAppKey });
 
 export const uploadFile = async (file: File, path: string) => {
   const contents = await file.arrayBuffer();
-  const res = await dbx.filesUpload({
+  return await dbx.filesUpload({
     path: `/${path}`,
     contents,
-    mode: 'overwrite',
+    mode: { '.tag': 'overwrite' },
   });
-  return res;
 };
 
 export const deleteFile = async (path: string) => {

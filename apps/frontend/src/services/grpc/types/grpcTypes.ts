@@ -69,8 +69,7 @@ export interface DeleteMultipleTracksResponse {
 
 export interface UploadTrackFileRequest {
   id: string;
-  filename: string;
-  data: Uint8Array;
+  audioFile: string;
 }
 
 export interface UploadTrackFileResponse {

@@ -305,8 +305,7 @@ const trackService: ITrackService = {
 
   uploadTrackFile: async (call: any, callback: any) => {
     try {
-      const { id, filename, data } = call.request;
-      
+      const { id, audioFile } = call.request;
       const existingTrack = await getTrackById(id);
       if (!existingTrack) {
         callback({
@@ -315,29 +314,7 @@ const trackService: ITrackService = {
         });
         return;
       }
-
-      const allowedExtensions = ['.mp3', '.wav'];
-      const fileExtension = path.extname(filename).toLowerCase();
-      if (!allowedExtensions.includes(fileExtension)) {
-        callback({
-          code: grpc.status.INVALID_ARGUMENT,
-          message: 'Invalid file type. Only MP3 and WAV files are allowed.'
-        });
-        return;
-      }
-
-      const maxSize = 10 * 1024 * 1024;
-      if (data.length > maxSize) {
-        callback({
-          code: grpc.status.INVALID_ARGUMENT,
-          message: 'File is too large. Maximum size is 10MB.'
-        });
-        return;
-      }
-
-      const fileName = await saveAudioFile(id, filename, Buffer.from(data));
-      const updatedTrack = await updateTrack(id, { audioFile: fileName });
-      
+      const updatedTrack = await updateTrack(id, { audioFile });
       if (!updatedTrack) {
         callback({
           code: grpc.status.INTERNAL,
@@ -345,7 +322,6 @@ const trackService: ITrackService = {
         });
         return;
       }
-      
       const response: UploadTrackFileResponse = { 
         track: convertTrackToGrpc(updatedTrack)
       };
