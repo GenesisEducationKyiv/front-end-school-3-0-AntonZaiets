@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package music;
+
+service GenreService {
+  rpc GetAllGenres(GetAllGenresRequest) returns (GetAllGenresResponse);
+}
+
+service TrackService {
+  rpc GetAllTracks(GetAllTracksRequest) returns (GetAllTracksResponse);
+  rpc GetTrackBySlug(GetTrackBySlugRequest) returns (GetTrackBySlugResponse);
+  rpc CreateTrack(CreateTrackRequest) returns (CreateTrackResponse);
+  rpc UpdateTrack(UpdateTrackRequest) returns (UpdateTrackResponse);
+  rpc DeleteTrack(DeleteTrackRequest) returns (DeleteTrackResponse);
+  rpc DeleteMultipleTracks(DeleteMultipleTracksRequest) returns (DeleteMultipleTracksResponse);
+  rpc UploadTrackFile(UploadTrackFileRequest) returns (UploadTrackFileResponse);
+  rpc DeleteTrackFile(DeleteTrackFileRequest) returns (DeleteTrackFileResponse);
+}
+
+message GetAllGenresRequest {
+  // Empty request
+}
+
+message GetAllGenresResponse {
+  repeated string genres = 1;
+}
+
+message GetAllTracksRequest {
+  int32 page = 1;
+  int32 limit = 2;
+  string search = 3;
+  repeated string genres = 4;
+  string sortBy = 5;
+  string sortOrder = 6;
+  string artist = 7;
+}
+
+message GetAllTracksResponse {
+  repeated Track tracks = 1;
+  int32 total = 2;
+  int32 page = 3;
+  int32 limit = 4;
+  int32 totalPages = 5;
+}
+
+message GetTrackBySlugRequest {
+  string slug = 1;
+}
+
+message GetTrackBySlugResponse {
+  Track track = 1;
+}
+
+message CreateTrackRequest {
+  string title = 1;
+  string artist = 2;
+  string album = 3;
+  repeated string genres = 4;
+  string coverImage = 5;
+}
+
+message CreateTrackResponse {
+  Track track = 1;
+}
+
+message UpdateTrackRequest {
+  string id = 1;
+  string title = 2;
+  string artist = 3;
+  string album = 4;
+  repeated string genres = 5;
+  string coverImage = 6;
+}
+
+message UpdateTrackResponse {
+  Track track = 1;
+}
+
+message DeleteTrackRequest {
+  string id = 1;
+}
+
+message DeleteTrackResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message DeleteMultipleTracksRequest {
+  repeated string ids = 1;
+}
+
+message DeleteMultipleTracksResponse {
+  bool success = 1;
+  string message = 2;
+  int32 deletedCount = 3;
+  repeated string notFoundIds = 4;
+}
+
+message UploadTrackFileRequest {
+  string id = 1;
+  string audioFile = 2;
+}
+
+message UploadTrackFileResponse {
+  Track track = 1;
+}
+
+message DeleteTrackFileRequest {
+  string track_id = 1;
+}
+
+message DeleteTrackFileResponse {
+  bool success = 1;
+  string message = 2;
+}
+
+message Track {
+  string id = 1;
+  string title = 2;
+  string artist = 3;
+  string album = 4;
+  repeated string genres = 5;
+  string coverImage = 6;
+  string slug = 7;
+  string audioFile = 8;
+} 

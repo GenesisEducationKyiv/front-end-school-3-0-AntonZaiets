@@ -1,0 +1,9 @@
+node_modules
+apps/frontend/node_modules
+dist
+apps/frontend/dist
+.git
+.gitignore
+.vscode
+*.log
+apps/backend 
