@@ -1,4 +1,4 @@
-import { Track as GrpcTrack } from '../types/grpcTypes';
+import { GetAllTracksResponse, Track as GrpcTrack } from '../types/grpcTypes';
 import { BaseTrack } from '../../../types/types.ts';
 
 export const convertGrpcTrackToBaseTrack = (
@@ -14,7 +14,9 @@ export const convertGrpcTrackToBaseTrack = (
   slug: grpcTrack.slug,
 });
 
-export const convertGrpcTracksResponse = (grpcResponse: any) => ({
+export const convertGrpcTracksResponse = (
+  grpcResponse: GetAllTracksResponse
+) => ({
   tracks: grpcResponse.tracks.map(convertGrpcTrackToBaseTrack),
   totalPages: grpcResponse.totalPages,
   currentPage: grpcResponse.page,

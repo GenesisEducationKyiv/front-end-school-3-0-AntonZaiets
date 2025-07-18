@@ -4,6 +4,7 @@ import {
   fetchGenres,
   fetchTrackBySlug,
 } from '../services/grpc/grpc-tracks.ts';
+import { handleError } from '../services/api/handleError.ts';
 
 export const useGenresQuery = () => {
   return useQuery({
@@ -13,7 +14,7 @@ export const useGenresQuery = () => {
       return result.match(
         (genres) => genres,
         (error) => {
-          console.error('Error loading genres:', error.message);
+          handleError(error);
           return [];
         }
       );
@@ -41,7 +42,7 @@ export const useTracksQuery = ({
       return result.match(
         (data) => data,
         (error) => {
-          console.error('Error loading tracks:', error.message);
+          handleError(error);
           return { tracks: [], totalPages: 0, currentPage: 1 };
         }
       );
@@ -58,7 +59,7 @@ export const useTrackBySlugQuery = (slug: string | null) => {
       return result.match(
         (track) => track,
         (error) => {
-          console.error('Error loading track by slug:', error.message);
+          handleError(error);
           return null;
         }
       );

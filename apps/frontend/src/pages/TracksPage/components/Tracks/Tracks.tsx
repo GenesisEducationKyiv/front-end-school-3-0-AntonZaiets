@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import useDebounce from '../../../../hooks/useDebounce.ts';
 import { useTracksQuery } from '../../../../hooks';
 import { TFetchTracksResponse } from '../../../../types/types.ts';
+import { handleError } from '../../../../services/api/handleError.ts';
 
 const Tracks = () => {
   const {
@@ -43,13 +44,13 @@ const Tracks = () => {
         if (data.activeTrackTitle !== undefined) {
           setActiveTrackTitle(data.activeTrackTitle);
         }
-      } catch (e) {
-        console.error('Error parsing WebSocket message:', e);
+      } catch (error) {
+        handleError(error);
       }
     };
 
     ws.onerror = (error) => {
-      console.error('WebSocket error:', error);
+      handleError(error);
     };
 
     return () => {

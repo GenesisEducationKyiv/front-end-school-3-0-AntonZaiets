@@ -40,7 +40,7 @@ message GetAllTracksResponse {
   int32 total = 2;
   int32 page = 3;
   int32 limit = 4;
-  int32 total_pages = 5;
+  int32 totalPages = 5;
 }
 
 message GetTrackBySlugRequest {

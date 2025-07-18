@@ -35,7 +35,7 @@ export class MusicServiceClient {
   private async makeGrpcWebRequest<T>(
     service: string,
     method: string,
-    request: any
+    request: unknown
   ): Promise<T> {
     const url = `${this.host}/${service}/${method}`;
 

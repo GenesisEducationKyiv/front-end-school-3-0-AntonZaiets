@@ -1,6 +1,6 @@
 import { ok } from 'neverthrow';
 import { handleError } from '../api/handleError.ts';
-import { AsyncResult } from '../../types/types.ts';
+import { AsyncResult, BaseTrack } from '../../types/types.ts';
 import { TrackFormData, TFetchTracksResponse } from '../../types/types.ts';
 import {
   musicServiceClient,
@@ -47,7 +47,7 @@ export const fetchTracks = async (
 
 export const fetchTrackBySlug = async (
   slug: string
-): AsyncResult<any | null> => {
+): AsyncResult<BaseTrack | null> => {
   try {
     const response = await musicServiceClient.getTrackBySlug({ slug });
 
@@ -63,7 +63,7 @@ export const fetchTrackBySlug = async (
   }
 };
 
-export const createTrack = async (data: TrackFormData): AsyncResult<any> => {
+export const createTrack = async (data: TrackFormData): AsyncResult<BaseTrack> => {
   try {
     const response = await musicServiceClient.createTrack({
       title: data.title,
@@ -107,7 +107,7 @@ export const deleteMultipleTracks = async (
 export const updateTrack = async (
   id: string,
   data: TrackFormData
-): AsyncResult<any> => {
+): AsyncResult<BaseTrack> => {
   try {
     const response = await musicServiceClient.updateTrack({
       id,
@@ -141,7 +141,7 @@ export const uploadFileNameToBackend = async (
   }
 };
 
-export const deleteTrackFile = async (id: string): AsyncResult<any> => {
+export const deleteTrackFile = async (id: string): AsyncResult<BaseTrack> => {
   try {
     const response = await musicServiceClient.deleteTrackFile({ id });
 

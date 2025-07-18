@@ -12,6 +12,7 @@ import { Suspense } from 'react';
 import TrackForm from '../../../../components/TrackForm/TrackForm.tsx';
 import { LazyConfirmDialog } from '../../../../components/LazyComponents/LazyComponents.tsx';
 import LoadingIndicator from '../../../../components/LoadingIndicator/LoadingIndicator.tsx';
+import { TrackFormData } from '../../../../types/types.ts';
 
 const TrackModals = () => {
   const {
@@ -51,7 +52,7 @@ const TrackModals = () => {
       ? tracksData.tracks.find((t) => t.id === editingTrackId)
       : undefined;
 
-  const handleSubmit = (formData: any) => {
+  const handleSubmit = (formData: TrackFormData) => {
     if (editingTrackId) {
       updateTrackMutation.mutate({
         id: editingTrackId,
@@ -93,9 +94,7 @@ const TrackModals = () => {
           data-testid="confirm-bulk-delete-dialog"
           open={isBulkConfirmOpen}
           onClose={() => setIsBulkConfirmOpen(false)}
-          onConfirm={() =>
-            deleteMultipleMutation.mutate(selectedTracks)
-          }
+          onConfirm={() => deleteMultipleMutation.mutate(selectedTracks)}
           title="Delete Selected Tracks"
           message="Are you sure you want to delete the selected tracks?"
         />

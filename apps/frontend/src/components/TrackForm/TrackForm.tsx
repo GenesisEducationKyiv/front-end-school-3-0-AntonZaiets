@@ -68,7 +68,7 @@ const TrackForm = ({
 
       <form
         key={track?.id || 'new'}
-        onSubmit={handleSubmit((data) => {
+        onSubmit={handleSubmit((data: TrackFormData) => {
           onSubmit(data);
         })}
       >
