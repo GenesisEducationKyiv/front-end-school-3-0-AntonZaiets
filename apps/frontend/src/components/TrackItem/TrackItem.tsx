@@ -1,5 +1,5 @@
 import React, { FC, Suspense, useState, useEffect } from 'react';
-import Card from '@/ui/Card.tsx';
+import Card from '@/ui/Card/Card.tsx';
 import TrackInfo from './components/TrackInfo/TrackInfo.tsx';
 import TrackActions from './components/TrackActions/TrackActions.tsx';
 import TrackCheckbox from './components/TrackCheckbox/TrackCheckbox.tsx';
@@ -66,6 +66,8 @@ const TrackItem: FC<{
 
   return (
     <Card
+      variant="elevated"
+      elevation={1}
       data-testid={`track-item-${track.id}`}
       sx={{
         position: 'relative',
@@ -76,6 +78,9 @@ const TrackItem: FC<{
         justifyContent: 'space-between',
         gap: 2,
         flexWrap: 'wrap',
+        '&:hover': {
+          boxShadow: '0px 2px 6px 2px rgba(0, 0, 0, 0.15), 0px 1px 2px 0px rgba(0, 0, 0, 0.30)',
+        },
       }}
     >
       <TrackCheckbox
@@ -95,7 +100,7 @@ const TrackItem: FC<{
         isSelectMode={isSelectMode}
         isSelected={isSelected}
         trackId={track.id}
-        setShowUpload={showUpload}
+        setShowUpload={setShowUpload}
       />
       <UploadModalHandler
         showUpload={showUpload}

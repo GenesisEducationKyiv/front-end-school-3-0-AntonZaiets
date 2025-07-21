@@ -1,12 +1,13 @@
 import TracksListSection from '@/components/TrackList/TrackList.tsx';
 import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
-import Typography from '@/ui/Typography';
+import Typography from '@/ui/Typography/Typography.tsx';
 import CustomPagination from '@/components/CustomPagination/CustomPagination.tsx';
 import { useEffect, useState } from 'react';
 import useDebounce from '../../../../hooks/useDebounce.ts';
-import { useTracksQuery } from '../../../../hooks';
-import { TFetchTracksResponse } from '../../../../types/types.ts';
-import { handleError } from '../../../../services/api/handleError.ts';
+import { useTracksQuery } from '@/hooks';
+import { TFetchTracksResponse } from '@/types/types.ts';
+import { handleError } from '@/services/api/handleError.ts';
+import useTrackPageStore from '@/stores/trackPageStore.ts';
 
 const Tracks = () => {
   const {
@@ -104,6 +105,7 @@ const Tracks = () => {
         onSelectTrack={toggleTrackSelection}
         onEditTrack={openEditTrackModal}
         onDeleteTrack={setDeletingTrackId}
+        isLoading={isLoading}
       />
       <CustomPagination
         data-testid="pagination"

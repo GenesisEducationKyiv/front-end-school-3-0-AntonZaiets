@@ -1,4 +1,4 @@
-import TextField from '@/ui/TextField';
+import TextField from '@/ui/TextField/TextField.tsx';
 import { ISearchBar } from './Interface';
 
 const SearchBar = ({ value, onChange }: ISearchBar) => {

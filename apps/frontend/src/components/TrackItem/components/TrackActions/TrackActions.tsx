@@ -1,8 +1,8 @@
 import React from 'react';
-import Box from '@/ui/Box';
-import IconButton from '@/ui/IconButton';
-import Button from '@/ui/Button';
-import Checkbox from '@/ui/Checkbox';
+import Box from '@/ui/Box/Box.tsx';
+import IconButton from '@/ui/IconButton/IconButton.tsx';
+import Button from '@/ui/Button/Button.tsx';
+import Checkbox from '@/ui/Checkbox/Checkbox.tsx';
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
 import CloudUpload from '@mui/icons-material/CloudUpload';
@@ -42,6 +42,7 @@ const TrackActions = ({
           <Delete />
         </IconButton>
         <Button
+          variant="tonal"
           startIcon={<CloudUpload />}
           onClick={() => setShowUpload(true)}
           size="small"

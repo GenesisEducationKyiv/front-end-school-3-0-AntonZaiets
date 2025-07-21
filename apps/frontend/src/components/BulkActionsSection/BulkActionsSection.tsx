@@ -1,7 +1,7 @@
-import Box from '@/ui/Box';
-import Button from '@/ui/Button';
-import FormControlLabel from '@/ui/FormControlLabel';
-import Checkbox from '@/ui/Checkbox';
+import Box from '@/ui/Box/Box.tsx';
+import Button from '@/ui/Button/Button.tsx';
+import FormControlLabel from '@/ui/FormControlLabel/FormControlLabel.tsx';
+import Checkbox from '@/ui/Checkbox/Checkbox.tsx';
 import Delete from '@mui/icons-material/Delete';
 import { BulkActionsSectionProps } from './Interface';
 
