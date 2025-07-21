@@ -1,0 +1,43 @@
+{
+  "name": "music-track-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/frontend",
+    "apps/backend/genesis_test-case"
+  ],
+  "devDependencies": {
+    "@types/compression": "^1.8.1",
+    "@types/ws": "^8.18.1",
+    "concurrently": "^8.2.2",
+    "husky": "^9.1.7",
+    "tsx": "^4.20.3"
+  },
+  "scripts": {
+    "dev:frontend": "npm run start --workspace=apps/frontend",
+    "dev:backend": "npm run dev --workspace=apps/backend/genesis_test-case",
+    "dev:grpc": "npm run dev:grpc --workspace=apps/backend/genesis_test-case",
+    "dev:proxy": "npm run dev:proxy --workspace=apps/backend/genesis_test-case",
+    "dev:ws": "npm run dev:ws --workspace=apps/backend/genesis_test-case",
+    "dev": "concurrently \"npm run dev:frontend\" \"npm run dev:backend\"",
+    "dev:all": "concurrently \"npm run dev:grpc --workspace=apps/backend/genesis_test-case\" \"npm run dev:proxy --workspace=apps/backend/genesis_test-case\" \"npm run start --workspace=apps/frontend\"",
+    "start": "npm run dev:all",
+    "lint": "npm run lint:frontend && npm run lint:backend",
+    "lint:frontend": "npm --workspace apps/frontend run lint",
+    "lint:backend": "npm --workspace apps/backend/genesis_test-case run lint",
+    "typecheck": "npm run typecheck --workspace=apps/frontend && npm run typecheck --workspace=apps/backend/genesis_test-case",
+    "postinstall": "husky install",
+    "prestart-prod": "echo VITE_API_URL=http://localhost:8081 > apps/frontend/.env.production",
+    "start:backend": "npm run start --workspace=apps/backend/genesis_test-case",
+    "start:proxy": "npm run dev:proxy --workspace=apps/backend/genesis_test-case",
+    "start:frontend": "npm run start-prod --workspace=apps/frontend",
+    "start:production": "npm run prestart-prod && concurrently -k -n backend,proxy,frontend -c green,cyan,magenta \"npm run start:backend\" \"npm run start:proxy\" \"npm run start:frontend\""
+  },
+  "dependencies": {
+    "compression": "^1.8.1",
+    "fastify": "^5.4.0",
+    "glob": "^11.0.3",
+    "minimatch": "^10.0.3",
+    "ws": "^8.18.3"
+  }
+}
