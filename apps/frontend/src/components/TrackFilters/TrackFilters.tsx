@@ -1,11 +1,9 @@
-import {
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  SelectChangeEvent,
-} from '@mui/material';
+import Box from '@/ui/Box';
+import FormControl from '@/ui/FormControl.tsx';
+import InputLabel from '@/ui/InputLabel.tsx';
+import Select from '@/ui/Select.tsx';
+import MenuItem from '@/ui/MenuItem.tsx';
+import { SelectChangeEvent } from '@mui/material';
 import SearchBar from '../SearchBar/SearchBar';
 import { MENU_ITEMS } from './constants/menuItems.ts';
 import { FiltersSectionProps } from './Interface';

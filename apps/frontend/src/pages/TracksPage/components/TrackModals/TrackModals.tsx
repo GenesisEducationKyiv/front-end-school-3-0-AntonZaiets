@@ -9,10 +9,12 @@ import {
   useDebounce,
 } from '../../../../hooks';
 import { Suspense } from 'react';
-import TrackForm from '../../../../components/TrackForm/TrackForm.tsx';
-import { LazyConfirmDialog } from '../../../../components/LazyComponents/LazyComponents.tsx';
 import LoadingIndicator from '../../../../components/LoadingIndicator/LoadingIndicator.tsx';
 import { TrackFormData } from '../../../../types/types.ts';
+
+const TrackForm = React.lazy(() => import('@/components/TrackForm/TrackForm.tsx'));
+const ConfirmDialog = React.lazy(() => import('@/components/ConfirmDialog/ConfirmDialog.tsx'));
+
 
 const TrackModals = () => {
   const {
@@ -67,17 +69,19 @@ const TrackModals = () => {
   return (
     <>
       {isModalOpen && (
-        <TrackForm
-          data-testid="track-form-modal"
-          open={isModalOpen}
-          onClose={closeModal}
-          onSubmit={handleSubmit}
-          track={editingTrack}
-          genres={genres}
-        />
+        <Suspense fallback={<LoadingIndicator size={24} />}>
+          <TrackForm
+            data-testid="track-form-modal"
+            open={isModalOpen}
+            onClose={closeModal}
+            onSubmit={handleSubmit}
+            track={editingTrack}
+            genres={genres}
+          />
+        </Suspense>
       )}
       <Suspense fallback={<LoadingIndicator size={24} />}>
-        <LazyConfirmDialog
+        <ConfirmDialog
           data-testid="confirm-delete-dialog"
           open={!!deletingTrackId}
           onClose={() => setDeletingTrackId(null)}
@@ -90,7 +94,7 @@ const TrackModals = () => {
           title="Delete Track"
           message="Are you sure you want to delete this track?"
         />
-        <LazyConfirmDialog
+        <ConfirmDialog
           data-testid="confirm-bulk-delete-dialog"
           open={isBulkConfirmOpen}
           onClose={() => setIsBulkConfirmOpen(false)}

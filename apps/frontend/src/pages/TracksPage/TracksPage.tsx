@@ -1,9 +1,16 @@
 import { Container, Paper } from '@mui/material';
 import useTrackPageStore from '../../stores/trackPageStore';
 import HeaderSection from '../../components/HeaderSection/HeaderSection.tsx';
+import Container from '@/ui/Container';
+import Paper from '@/ui/Paper';
+import useTrackPageStore from '../../stores/trackPageStore';
+import HeaderSection from '@/components/HeaderSection/HeaderSection.tsx';
 import FiltersAndBulk from './components/FiltersAndBulk/FiltersAndBulk.tsx';
-import TrackModals from './components/TrackModals/TrackModals.tsx';
 import Tracks from './components/Tracks/Tracks.tsx';
+import React, { Suspense } from 'react';
+import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
+
+const TrackModals = React.lazy(() => import('./components/TrackModals/TrackModals'));
 
 const TrackPage = () => {
   const { isSelectMode, setIsSelectMode, openNewTrackModal } =
@@ -45,7 +52,9 @@ const TrackPage = () => {
         <FiltersAndBulk />
         <Tracks />
       </Paper>
-      <TrackModals />
+      <Suspense fallback={<LoadingIndicator size={24} />}>
+        <TrackModals />
+      </Suspense>
     </Container>
   );
 };

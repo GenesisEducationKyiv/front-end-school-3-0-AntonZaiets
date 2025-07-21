@@ -1,8 +1,7 @@
-import useTrackPageStore from '../../../../stores/trackPageStore.ts';
-import TracksListSection from '../../../../components/TrackList/TrackList.tsx';
-import LoadingIndicator from '../../../../components/LoadingIndicator/LoadingIndicator.tsx';
-import { Typography } from '@mui/material';
-import CustomPagination from '../../../../components/CustomPagination/CustomPagination.tsx';
+import TracksListSection from '@/components/TrackList/TrackList.tsx';
+import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
+import Typography from '@/ui/Typography';
+import CustomPagination from '@/components/CustomPagination/CustomPagination.tsx';
 import { useEffect, useState } from 'react';
 import useDebounce from '../../../../hooks/useDebounce.ts';
 import { useTracksQuery } from '../../../../hooks';

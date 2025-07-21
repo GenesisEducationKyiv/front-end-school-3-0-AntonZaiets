@@ -1,10 +1,13 @@
-import { Button, Box } from '@mui/material';
+import React from 'react';
+import Button from '@/ui/Button';
+import Box from '@/ui/Box';
 import { IPagination } from './Interface';
-const CustomPagination = ({
+
+const CustomPagination = React.memo<IPagination>(({
   currentPage,
   totalPages = 5,
   onPageChange,
-}: IPagination) => {
+}) => {
   return (
     <Box
       display="flex"
@@ -34,6 +37,8 @@ const CustomPagination = ({
       </Button>
     </Box>
   );
-};
+});
+
+CustomPagination.displayName = 'CustomPagination';
 
 export default CustomPagination;

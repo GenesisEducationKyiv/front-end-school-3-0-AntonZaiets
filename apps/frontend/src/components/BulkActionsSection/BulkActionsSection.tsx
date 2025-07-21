@@ -1,6 +1,10 @@
-import { Box, Button, FormControlLabel, Checkbox } from '@mui/material';
-import { Delete } from '@mui/icons-material';
+import Box from '@/ui/Box';
+import Button from '@/ui/Button';
+import FormControlLabel from '@/ui/FormControlLabel';
+import Checkbox from '@/ui/Checkbox';
+import Delete from '@mui/icons-material/Delete';
 import { BulkActionsSectionProps } from './Interface';
+
 
 const BulkActionsSection = ({
   isSelectMode,

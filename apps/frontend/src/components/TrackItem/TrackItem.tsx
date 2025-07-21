@@ -1,25 +1,48 @@
-import { useState, useEffect, Suspense } from 'react';
-import { Card } from '@mui/material';
+import React, { FC, Suspense, useState, useEffect } from 'react';
+import Card from '@/ui/Card.tsx';
 import TrackInfo from './components/TrackInfo/TrackInfo.tsx';
 import TrackActions from './components/TrackActions/TrackActions.tsx';
-import { LazyTrackAudioPlayer } from '../LazyComponents/LazyComponents.tsx';
 import TrackCheckbox from './components/TrackCheckbox/TrackCheckbox.tsx';
-import UploadModalHandler from './components/UploadModalHandler/UploadModalHandler.tsx';
-import { getTemporaryLink } from '../../services/api/dropboxService.ts';
-import { ITrackItem } from './Interface';
-import { AsyncResult } from '../../types/types.ts';
+import { getTemporaryLink } from '@/services/api/dropboxService.ts';
+import { AsyncResult } from '@/types/types.ts';
 import { ok } from 'neverthrow';
-import { handleError } from '../../services/api/handleError.ts';
-import LoadingIndicator from '../LoadingIndicator/LoadingIndicator.tsx';
+import { handleError } from '@/services/api/handleError.ts';
+import LoadingIndicator from '@/components/LoadingIndicator/LoadingIndicator.tsx';
+import UploadModalHandler from './components/UploadModalHandler/UploadModalHandler';
+import TrackItemSkeleton from './TrackItemSkeleton';
 
-const TrackItem = ({
+const TrackAudioPlayer = React.lazy(
+  () => import('./components/TrackAudioPlayer/TrackAudioPlayer')
+);
+
+interface Track {
+  id: string;
+  title: string;
+  artist: string;
+  album: string;
+  genres: string[];
+  audioFile?: string;
+}
+
+const TrackItem: FC<{
+  track: Track;
+  isSelectMode: boolean;
+  isSelected: boolean;
+  onSelect: () => void;
+  onEdit: () => void;
+  onDelete: () => void;
+  isLoading?: boolean;
+  loading?: 'eager' | 'lazy';
+}> = ({
   track,
-  onEdit,
-  onDelete,
   isSelectMode,
   isSelected,
   onSelect,
-}: ITrackItem) => {
+  onEdit,
+  onDelete,
+  isLoading = false,
+  loading,
+}) => {
   const [showUpload, setShowUpload] = useState(false);
   const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
@@ -38,6 +61,8 @@ const TrackItem = ({
     };
     fetchAudioUrl();
   }, [track.audioFile, track.id]);
+
+  if (isLoading) return <TrackItemSkeleton />;
 
   return (
     <Card
@@ -59,9 +84,9 @@ const TrackItem = ({
         onSelect={onSelect}
         trackId={track.id}
       />
-      <TrackInfo track={track} />
-      <Suspense fallback={<LoadingIndicator size={24} />}>
-        <LazyTrackAudioPlayer audioUrl={audioUrl} trackId={track.id} />
+      <TrackInfo track={track} loading={loading} />
+      <Suspense fallback={<LoadingIndicator size={20} message={''} />}>
+        <TrackAudioPlayer audioUrl={audioUrl} trackId={track.id} />
       </Suspense>
       <TrackActions
         onEdit={onEdit}
@@ -70,7 +95,7 @@ const TrackItem = ({
         isSelectMode={isSelectMode}
         isSelected={isSelected}
         trackId={track.id}
-        setShowUpload={setShowUpload}
+        setShowUpload={showUpload}
       />
       <UploadModalHandler
         showUpload={showUpload}

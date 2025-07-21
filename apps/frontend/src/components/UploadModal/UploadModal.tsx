@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  CircularProgress,
-  IconButton,
-} from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import { uploadFile } from '../../services/api/dropboxService.ts';
-import { uploadFileNameToBackend } from '../../services/grpc/grpc-tracks.ts';
+import Dialog from '@/ui/Dialog';
+import DialogContent from '@/ui/DialogContent';
+import DialogActions from '@/ui/DialogActions';
+import DialogTitle from '@/ui/DialogTitle';
+import Button from '@/ui/Button';
+import CircularProgress from '@/ui/CircularProgress';
+import IconButton from '@/ui/IconButton';
+import { uploadFile } from '@/services/api/dropboxService.ts';
+import { uploadFileNameToBackend } from '@/services/api/grpc-tracks.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import { IUploadModal } from './Interface';
-import { AsyncResult } from '../../types/types.ts';
-import { handleError } from '../../services/api/handleError.ts';
+import { AsyncResult } from '@/types/types.ts';
+import { handleError } from '@/services/api/handleError.ts';
 import { ok } from 'neverthrow';
+import CloseIcon from '@mui/icons-material/Close';
 
 const UploadModal = ({
   open,

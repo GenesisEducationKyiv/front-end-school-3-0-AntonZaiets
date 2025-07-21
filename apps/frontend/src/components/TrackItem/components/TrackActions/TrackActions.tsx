@@ -1,6 +1,11 @@
 import React from 'react';
-import { Box, IconButton, Button, Checkbox } from '@mui/material';
-import { Edit, Delete, CloudUpload } from '@mui/icons-material';
+import Box from '@/ui/Box';
+import IconButton from '@/ui/IconButton';
+import Button from '@/ui/Button';
+import Checkbox from '@/ui/Checkbox';
+import Edit from '@mui/icons-material/Edit';
+import Delete from '@mui/icons-material/Delete';
+import CloudUpload from '@mui/icons-material/CloudUpload';
 
 const TrackActions = ({
   onEdit,
